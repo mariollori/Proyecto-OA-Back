@@ -1,7 +1,7 @@
 import express from "express";
 import morgan from "morgan";
 import allRoutes from "./allRutas";
-
+require('dotenv').config();
 
 const app = express();
 var cors = require("cors");
@@ -19,4 +19,4 @@ const { pg } = require("./database");
 
 //DATABASE
 
-export default app;
+app.listen(process.env.PORT);
