@@ -17,7 +17,7 @@ export const obtenerpersonas= async(req,res)=>{
 export const enviarcorreo=async(req,res)=>{
     const {mensaje,titulo,destinatario,fecha,idusuario} = req.body;
     var mailOptions = {
-        from: 'mariollori@upeu.edu.pe',
+        from: 'examen3dad@gmail.com',
         to: destinatario,
         subject: titulo,
         text: mensaje
@@ -25,8 +25,8 @@ export const enviarcorreo=async(req,res)=>{
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'mariollori@upeu.edu.pe',
-          pass: 'tkjksttnhtunpyeu'
+          user: 'examen3dad@gmail.com',
+          pass: 'chain@24'
         }
       });
     try {
