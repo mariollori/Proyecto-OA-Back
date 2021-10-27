@@ -17,3 +17,5 @@ const archivo = require('./routes/archivo.route')
 appe.use('/archivo',archivo)
 module.exports = appe;
 
+const opciones = require('./routes/opciones.route')
+appe.use('/opcion', opciones)

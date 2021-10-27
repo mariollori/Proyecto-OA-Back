@@ -8,18 +8,23 @@ const refreshTokenSecret = "ex4m3n-p4r614l-3-refresh-access-token";
 export const login=async(req,res)=>{
 
     const {username,password} =req.body;
-    console.log(username,password);
+  
 
     try {
-        const usuario  = await pool.query('select * from usuario where username=$1 and estado=1',[username]);
+        const responesuser  = await pool.query('select * from usuario where username=$1 ',[username]);
        
-        if(usuario.rows.length!=0){
-         
-            const passold= usuario.rows[0].password;
-           
+        if(responesuser.rows.length!=0){
+          
+            const passold= responesuser.rows[0].password;
+            
             if(await bcryptjs.compare(password,passold)){
-                const payload = { idusuario:usuario.rows[0].idusuario}
-                const token = jwt.sign(payload,secret,{expiresIn:'10m'})
+
+                const usuario = {"idusuario":responesuser.rows[0].idusuario,"idpersonal":responesuser.rows[0].idpersonal};
+                const responserol  = await pool.query('select r.idrol, r.nombre  from rol r, usuario_rol ur  where  ur.idusuario=$1 and ur.idrol = r.idrol',[responesuser.rows[0].idusuario]);
+ 
+                const roles = responserol.rows;
+                const payload = { usuario, roles}
+                const token = jwt.sign(payload,secret,{expiresIn:'15m'})
                 return res.status(200).json({token})
             }else{
                 return res.status(403).json({

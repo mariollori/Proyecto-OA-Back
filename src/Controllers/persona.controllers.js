@@ -3,16 +3,6 @@ var nodemailer = require('nodemailer');
 
 
 
-export const obtenerpersonas= async(req,res)=>{
-     const  estado  = req.params.estado
-    try {
-        const response = await pool.query('select * from persona where estado = $1', [estado]);
-        return res.status(200).json(response.rows);
-    } catch (e) {
-        console.log(e);
-        return res.status(500).json('Error Interno....!');
-    }
-}
 
 export const enviarcorreo=async(req,res)=>{
     const {mensaje,titulo,destinatario,fecha,idusuario} = req.body;
@@ -97,3 +87,31 @@ export const getcorreos = async(req,res)=>{
  
  
 }
+
+
+
+
+export const crearpaciente=async(req,res)=>{
+    const {paciente,persona} = req.body;
+
+    try {
+        const responseper = await  pool.query('insert into persona(nombre,apellido,correo,genero,dni,telefono,tipo) values($1,$2,$3,$4,$5,$6,$7)   RETURNING idpersona',[persona.nombre,persona.apellido,persona.correo,persona.genero,persona.dni,persona.telefono,'paciente'])
+        
+        if(responseper.rows[0].length!=0){
+            var f = new Date();
+            
+           
+            const responseuser = await pool.query('insert into paciente(descripcion,idpersona,motivo,fecha,estado,edad) values($1,$2,$3,$4,$5,$6)',[paciente.descripcion,responseper.rows[0].idpersona,paciente.motivo,f,'Sin Asignar',paciente.edad]);
+          
+        } 
+        
+               
+        return res.status(200).json(` ${persona.nombre } , su consulta ha sido registrada, en breve se le asignara un especialista.`);
+        
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno....!');
+    }
+
+}
+
