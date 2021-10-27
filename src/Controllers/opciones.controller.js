@@ -176,3 +176,30 @@ export const listarrolid = async (req, res) => {
         return res.status(500).json('Error Interno...!');
     }
 }
+
+
+// <<---------------------ROLES - OPCIONES - DIFERENTES------------------------------------->>
+
+export const listaropcdisponibles = async (req, res) => {
+    try {
+        const idrol = req.params.id
+        const response = await pool.query(' select  o.idopcion, o.nombre from opciones o where not exists (select o.idopcion ,o.nombre from   rol_opcion ro where ro.idrol= $1 and o.idopcion= ro.idopcion)   ',[idrol]);
+        return res.status(200).json(response.rows);
+     } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno...!');
+    }
+}
+
+
+
+export const listarusuariosdisponibles = async (req, res) => {
+    try {
+        const id = req.params.id
+        const response = await pool.query('select * from rol where idrol=$1',[id]);
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno...!');
+    }
+}
