@@ -67,7 +67,7 @@ export const modificaropcion = async (req, res) => {
          
         const  {opcion}=req.body;
         const response = await pool.query('update opciones set nombre=$1, icono=$2,ruta=$3 where idopcion = $4', [opcion.nombre,opcion.icono,opcion.ruta,opcion.idopcion]);
-        return res.status(200).json(  `Rol ${nombre} modificado correctamente`  );
+        return res.status(200).json(  `Rol ${opcion.nombre} modificado correctamente`  );
     } catch (e) {
         console.log(e);
         return res.status(500).json('Error Interno...!');
@@ -111,9 +111,9 @@ export const listaropcid = async (req, res) => {
 
 export const crearrol = async (req, res) => {
     try {
-         
-        const  nombre=req.body;
-        const response = await pool.query('insert into rol(nombre) values($1)', [ nombre]);
+         console.log(req.body)
+        const  {nombre}=req.body;
+        const response = await pool.query('insert into rol(nombre) values($1)', [nombre]);
         return res.status(200).json(  `Rol ${nombre} registrado correctamente`  );
     } catch (e) {
         console.log(e);
