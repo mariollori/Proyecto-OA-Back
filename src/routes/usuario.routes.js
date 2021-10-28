@@ -6,6 +6,7 @@ const { checkToken } = require('../auth/tokenValidation');
 
 router.get('/:id',checkToken, usuario.readUser);
 
+
 router.post('/', usuario.createUser);
 
 

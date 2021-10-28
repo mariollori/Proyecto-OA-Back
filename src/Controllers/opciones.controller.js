@@ -196,7 +196,31 @@ export const listaropcdisponibles = async (req, res) => {
 export const listarusuariosdisponibles = async (req, res) => {
     try {
         const id = req.params.id
-        const response = await pool.query('select * from rol where idrol=$1',[id]);
+        const response = await pool.query(' select  r.idrol, r.nombre from rol r where not exists (select r.idrol ,r.nombre from   usuario_rol ur where ur.idusuario= $1 and r.idrol= ur.idrol)  ',[id]);
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno...!');
+    }
+}
+
+
+export const listarusuariospertenecientes = async (req, res) => {
+    try {
+        const id = req.params.id
+        const response = await pool.query(' select r.idrol ,r.nombre from rol r,  usuario_rol ur where ur.idusuario= $1 and r.idrol= ur.idrol ',[id]);
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno...!');
+    }
+}
+
+
+// <<<------------------- USUARIO ------------------------->>>
+export const listarusuarios = async (req, res) => {
+    try {
+        const response = await pool.query('select p.nombre , p.apellido, u.username, u.idusuario from persona p ,personal_ayuda pa,usuario u where u.idpersonal = pa.idpersonal and pa.idpersona = p.idpersona');
         return res.status(200).json(response.rows);
     } catch (e) {
         console.log(e);
