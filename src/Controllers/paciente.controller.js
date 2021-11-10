@@ -1,6 +1,30 @@
 import { pool } from '../database'
 
 
+export const getatenciones_pend = async(req,res)=>{
+    const idpersonal = req.params.id;
+    try {
+        const response = await pool.query(
+            `select  distinct p.nombre,p.apellido, c.descripcion, ra.fecha_sesion
+            from paciente c, persona p, personal_ayuda a, asignaciones d , registro_atencion ra
+            where d.idpersonal=$1
+                  and d.idasignacion = ra.idasignacion
+                  and ra.estado = 0
+                  and d.idpaciente=c.idpaciente 
+                  and c.estado = 'En proceso'
+                  and c.idpersona = p.idpersona;`,[idpersonal]);
+              console.log(response.rows)
+
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno....!');
+    }
+ 
+ 
+ 
+}
+
 export const getpac_asignados = async(req,res)=>{
     const idpersonal = req.params.id;
     try {
