@@ -95,13 +95,13 @@ export const crearpaciente=async(req,res)=>{
     const {paciente,persona} = req.body;
 
     try {
-        const responseper = await  pool.query('insert into persona(nombre,apellido,correo,genero,dni,telefono,tipo) values($1,$2,$3,$4,$5,$6,$7)   RETURNING idpersona',[persona.nombre,persona.apellido,persona.correo,persona.genero,persona.dni,persona.telefono,'paciente'])
+        const responseper = await  pool.query('insert into persona(nombre,apellido,correo,genero,telefono,tipo) values($1,$2,$3,$4,$5,$6)   RETURNING idpersona',[persona.nombre,persona.apellido,persona.correo,persona.genero,persona.telefono,'paciente'])
         
         if(responseper.rows[0].length!=0){
             var f = new Date();
             
            
-            const responseuser = await pool.query('insert into paciente(descripcion,idpersona,motivo,fecha,estado,edad) values($1,$2,$3,$4,$5,$6)',[paciente.descripcion,responseper.rows[0].idpersona,paciente.motivo,f,'Sin Asignar',paciente.edad]);
+            const responseuser = await pool.query('insert into paciente(descripcion,idpersona,motivo,fecha,estado) values($1,$2,$3,$4,$5)',[paciente.descripcion,responseper.rows[0].idpersona,paciente.motivo,f,'Sin Asignar']);
           
         } 
         
