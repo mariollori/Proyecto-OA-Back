@@ -208,7 +208,7 @@ export const listarusuariosdisponibles = async (req, res) => {
 export const listarusuariospertenecientes = async (req, res) => {
     try {
         const id = req.params.id
-        const response = await pool.query(' select r.idrol ,r.nombre from rol r,  usuario_rol ur where ur.idusuario= $1 and r.idrol= ur.idrol ',[id]);
+        const response = await pool.query(' select ur.iduser_rol,ur.iduser_rol, r.idrol ,r.nombre from rol r,  usuario_rol ur where ur.idusuario= $1 and r.idrol= ur.idrol ',[id]);
         return res.status(200).json(response.rows);
     } catch (e) {
         console.log(e);
@@ -222,6 +222,47 @@ export const listarusuarios = async (req, res) => {
     try {
         const response = await pool.query('select p.nombre , p.apellido, u.username, u.idusuario from persona p ,personal_ayuda pa,usuario u where u.idpersonal = pa.idpersonal and pa.idpersona = p.idpersona');
         return res.status(200).json(response.rows);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno...!');
+    }
+}
+
+
+
+
+export const listaropcionesderol = async (req, res) => {
+    try {
+        const id = req.params.id
+        const response = await pool.query(' select ro.idop_rol, o.idopcion ,o.nombre from opciones o,  rol_opcion ro where ro.idrol= $1 and o.idopcion= ro.idopcion ',[id]);
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno...!');
+    }
+}
+
+
+
+export const eliminarroldeusuario = async (req, res) => {
+    try {
+         
+        const  id= req.params.id;
+        const response = await pool.query('delete from usuario_rol where iduser_rol=$1', [id]);
+        return res.status(200).json(  `Rol de usuario eliminado. `  );
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno...!');
+    }
+}
+
+
+export const eliminaropcionderol = async (req, res) => {
+    try {
+         
+        const  id= req.params.id;
+        const response = await pool.query('delete from rol_opcion where idop_rol=$1', [id]);
+        return res.status(200).json(  `Opcion de rol eliminado `  );
     } catch (e) {
         console.log(e);
         return res.status(500).json('Error Interno...!');
