@@ -54,7 +54,7 @@ export const  updateDatosPsicologo = async (req, res) => {
         return res.status(200).send(`El registro ${personal_ayuda.idpersonal} se ha sifo modificado.`);
     } catch (e) {
         console.log(e)
-        return res.status(500).json('Internal Server error!');
+        return res.status(500).json('Ocurrio un Problemas en el servidor interno!.');
     }
 }
 
