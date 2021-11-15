@@ -1,6 +1,7 @@
 {
-  "name": "categorizacionDocente-backend",
+  "name": "ProyectoOa-backend",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/app.js --exec babel-node"
@@ -18,19 +19,18 @@
     "mime-types": "^2.1.31",
     "morgan": "^1.10.0",
     "nodemailer": "^6.6.2",
-    "pg": "^8.7.1"
+    "pg": "^8.6.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.16.0",
-    "@babel/core": "^7.16.0",
-    "@babel/node": "^7.16.0",
-    "@babel/plugin-transform-runtime": "^7.16.0",
-    "@babel/preset-env": "^7.16.0",
-    "nodemon": "^2.0.14"
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/node": "^7.14.5",
+    "@babel/plugin-transform-runtime": "^7.14.5",
+    "@babel/preset-env": "^7.14.5",
+    "nodemon": "^2.0.7"
   },
   "engines": {
     "node": "14.x",
     "npm": "7.x"
-  },
-  "description": ""
+  }
 }

@@ -20,5 +20,11 @@ module.exports = appe;
 const opciones = require('./routes/opciones.route')
 appe.use('/opcion', opciones)
 
+
 const datos_psicologo = require('./routes/reg_dt_psicolog.router')
 appe.use('/datos_psicologo', datos_psicologo)
+
+
+const paciente= require('./routes/paciente.route')
+appe.use('/paciente', paciente)
+
