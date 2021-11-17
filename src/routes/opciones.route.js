@@ -26,13 +26,21 @@ router.get('/listarrolid/:id',checkToken,opciones_rol.listarrolid);
 
 
 
-router.get('/listaropcdisponibles/:id',opciones_rol.listaropcdisponibles);
 
 
-router.get('/listarrolesdisponibles/:id',opciones_rol.listarusuariosdisponibles);
-router.get('/listarrolesactuales/:id',opciones_rol.listarusuariospertenecientes);
+router.get('/listaropcdisponibles/:id',checkToken,opciones_rol.listaropcdisponibles);
+
+
+router.get('/listarrolesdisponibles/:id',checkToken,opciones_rol.listarusuariosdisponibles);
+router.get('/listarrolesactuales/:id',checkToken,opciones_rol.listarusuariospertenecientes);
 router.post('/asignarrol/',checkToken,opciones_rol.asignarrol_user);
 
-router.get('/listarusers/',opciones_rol.listarusuarios);
+router.get('/listarusers/',checkToken,opciones_rol.listarusuarios);
+router.get('/listaropcionesactuales/:id',checkToken,opciones_rol.listaropcionesderol);
+
+
+router.delete('/eliminaropcrol/:id',checkToken,opciones_rol.eliminaropcionderol);
+router.delete('/eliminarroluser/:id',checkToken,opciones_rol.eliminarroldeusuario);
+
 
 module.exports = router;

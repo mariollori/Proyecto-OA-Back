@@ -5,7 +5,10 @@ const bcrypt =require('bcryptjs')
 export const readUser = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        const response = await pool.query('select p.nombre,p.apellido,p.telefono from persona p ,personal_ayuda  u where u.idpersonal=$1 and u.idpersona=  p.idpersona ', [id]);
+
+        const response = await pool.query('select p.nombre,p.apellido,p.telefono,p.correo,u.tipo from persona p ,personal_ayuda  u where u.idpersonal=$1 and u.idpersona=  p.idpersona ', [id]);
+
+
         return res.status(200).json(response.rows);
     } catch (e) {
         console.log(e);

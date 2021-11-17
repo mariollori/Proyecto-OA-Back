@@ -24,7 +24,15 @@ export const login=async(req,res)=>{
  
                 const roles = responserol.rows;
                 const payload = { usuario, roles}
-                const token = jwt.sign(payload,secret,{expiresIn:'30m'})
+
+               
+
+
+                
+
+                const token = jwt.sign(payload,secret,{expiresIn:'60m'})
+
+
                 return res.status(200).json({token})
             }else{
                 return res.status(403).json({

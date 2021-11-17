@@ -2,6 +2,10 @@ import { Pool } from 'pg'
 
 
 export const pool = new Pool({
+
+
+
+
     connectionString: process.env.d2v580k0in2ih6,
     ssl: {
         rejectUnauthorized: false
