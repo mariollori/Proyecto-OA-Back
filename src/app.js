@@ -19,5 +19,10 @@ const { pg } = require("./database");
 
 //DATABASE
 
-console.log(process.env.PORT);
-app.listen(process.env.PORT || 5050);
+//console.log(process.env.PORT);
+app.listen(process.env.PORT || 5050, () => {
+    console.log("Listen Server on port 5050");
+});
+    
+
+

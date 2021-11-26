@@ -208,7 +208,11 @@ export const listarusuariosdisponibles = async (req, res) => {
 export const listarusuariospertenecientes = async (req, res) => {
     try {
         const id = req.params.id
+
+      
+
         const response = await pool.query(' select ur.iduser_rol,ur.iduser_rol, r.idrol ,r.nombre from rol r,  usuario_rol ur where ur.idusuario= $1 and r.idrol= ur.idrol ',[id]);
+
         return res.status(200).json(response.rows);
     } catch (e) {
         console.log(e);
@@ -268,3 +272,4 @@ export const eliminaropcionderol = async (req, res) => {
         return res.status(500).json('Error Interno...!');
     }
 }
+

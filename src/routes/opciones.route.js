@@ -26,6 +26,8 @@ router.get('/listarrolid/:id',checkToken,opciones_rol.listarrolid);
 
 
 
+
+
 router.get('/listaropcdisponibles/:id',checkToken,opciones_rol.listaropcdisponibles);
 
 
@@ -39,4 +41,6 @@ router.get('/listaropcionesactuales/:id',checkToken,opciones_rol.listaropcionesd
 
 router.delete('/eliminaropcrol/:id',checkToken,opciones_rol.eliminaropcionderol);
 router.delete('/eliminarroluser/:id',checkToken,opciones_rol.eliminarroldeusuario);
+
+
 module.exports = router;
