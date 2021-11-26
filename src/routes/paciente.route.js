@@ -10,4 +10,7 @@ router.get('/getidatencion/:id', checkToken,paciente.getlast_register);
 router.post('/registrardata1', checkToken,paciente.registraratencion_datos);
 router.post('/registrardata2', checkToken,paciente.registraratencionnueva);
 router.post('/registrardata3', checkToken,paciente.registraratencion_final);
+
+
+router.put('/updatefecha',checkToken,paciente.updateatencion);
 module.exports = router;

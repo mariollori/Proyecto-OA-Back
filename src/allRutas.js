@@ -23,3 +23,7 @@ appe.use('/opcion', opciones)
 
 const paciente= require('./routes/paciente.route')
 appe.use('/paciente', paciente)
+
+
+const psi= require('./routes/psicologo.route')
+appe.use('/psicologo', psi)

@@ -5,7 +5,7 @@ import * as persona from '../Controllers/persona.controllers'
 
 
 
-router.post('/postuser',persona.crearuser);
+
 
 router.post('/enviarcorreo',persona.enviarcorreo);
 

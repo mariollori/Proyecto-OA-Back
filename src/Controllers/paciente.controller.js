@@ -5,7 +5,7 @@ export const getatenciones_pend = async(req,res)=>{
     const idpersonal = req.params.id;
     try {
         const response = await pool.query(
-            `select  distinct p.nombre,p.apellido, c.descripcion, ra.fecha_sesion
+            `select  distinct p.nombre,p.apellido, c.descripcion, ra.fecha_sesion,ra.hora,ra.idregistro_aten
             from paciente c, persona p, personal_ayuda a, asignaciones d , registro_atencion ra
             where d.idpersonal=$1
                   and d.idasignacion = ra.idasignacion
@@ -102,7 +102,7 @@ export const registraratencion_final = async (req, res) => {
 
 
 export const registraratencion_datos=async(req,res)=>{
-    const {paciente,fecha,id,atencion} = req.body;
+    const {paciente,fecha,id,atencion,hora} = req.body;
 
     try {
         const response = await  pool.query(    
@@ -117,7 +117,7 @@ export const registraratencion_datos=async(req,res)=>{
          values($1,$2,$3,$4,$5,$6,$7) `
          ,[id,atencion.nro_sesion,atencion.condicion,atencion.evidencia,atencion.observaciones,f,1]);
      
-         const response3 =   await  pool.query('insert into registro_atencion(fecha_sesion,idasignacion,estado) values($1,$2,$3)   ',[fecha,id,0]);
+         const response3 =   await  pool.query('insert into registro_atencion(fecha_sesion,idasignacion,estado,hora) values($1,$2,$3,$4)   ',[fecha,id,0,hora]);
         
                
         return res.status(200).json(` Atencio Registrada Correctamente`);
@@ -130,12 +130,13 @@ export const registraratencion_datos=async(req,res)=>{
 }
 
 export const registraratencionnueva=async(req,res)=>{
-    const {atencion,fecha,id} = req.body;
+    const {atencion,fecha,id,hora} = req.body;
 
     try {
         const response = await pool.query('update registro_atencion set  condicion=$1,evidencia=$2 ,observaciones=$3 ,estado=$4, nro_sesion=$5 where idregistro_aten = $6', [atencion.condicion,atencion.evidencia,atencion.observaciones,1,atencion.nro_sesion,atencion.idregistro_aten]);
 
-        const response2 =  await registrarfechaatencion(fecha,id);
+        const response2 =   await  pool.query('insert into registro_atencion(fecha_sesion,idasignacion,estado,hora) values($1,$2,$3,$4)   ',
+        [fecha,id,0,hora]);
                
         return res.status(200).json(` Atencin registrada correctamente`);
         
@@ -147,13 +148,19 @@ export const registraratencionnueva=async(req,res)=>{
 }
 
 
- async function registrarfechaatencion(fecha,id){
+export const updateatencion=async(req,res)=>{
+    const {fecha,id,hora} = req.body;
+
     try {
-        const response = await  pool.query('insert into registro_atencion(fecha_sesion,idasignacion,estado) values($1,$2,$3)   ',[fecha,id,0]);
-        return true;
+        const response = await pool.query('update registro_atencion set  fecha_sesion=$1,hora=$2  where idregistro_aten = $3', 
+        [fecha,hora,id]);
+               
+        return res.status(200).json(`Fecha de  atencion actualizada`);
         
     } catch (e) {
-    
-        return false;
+        console.log(e);
+        return res.status(500).json('Error Interno....!');
     }
+
 }
+
