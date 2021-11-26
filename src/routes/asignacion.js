@@ -5,12 +5,9 @@ import * as asignacion from '../Controllers/asigancion.controller'
 
 //ruta general
 router.get('/get/estado', asignacion.buscarasignacion);
-//RUTA PASTOR
-router.get('/pastor', asignacion.getPastor);
-//RUTA ESTUDIANTE
-router.get('/estudiante', asignacion.getEstudiante);
-//RUTA PSICOLOGO
-router.get('/psicologo', asignacion.getPsicologo);
+
+//RUTA Personal Ayuda
+router.get('/personal_ayuda', asignacion.getpersonalayudadisponible);
 
 
 module.exports = router;

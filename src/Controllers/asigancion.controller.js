@@ -44,42 +44,29 @@ export const buscarasignacion = async (req, res) => {
     try {
         const estado=req.query.estado;
         console.log(estado);
-        const response = await pool.query(`select p.nombre, p.apellido, a.motivo, p.telefono, a.estado from persona p, paciente a where a.idpersona = p.idpersona and a.estado= $1`,[estado]);
+        const response = await pool.query(`select p.nombre, p.apellido, a.motivo,a.descripcion, p.telefono, a.estado from persona p, paciente a where a.idpersona = p.idpersona and a.estado= $1`,[estado]);
         return res.status(200).json(response.rows);
     } catch (e) {
         return res.status(500).json(e);
     }
 }
 
-//PASTOR
 
-export const getPastor = async (req, res) => {
+//Personal Ayuda
+
+export const getpersonalayudadisponible = async (req, res) => {
     try {
-        const response = await pool.query(`select *from personal_ayuda where tipo ='pastor'`);
+        const estado=req.query.estado;
+        const response = await pool.query(`
+        select pa.ciclo,pa.especialidad,pa.grupo,pa.idpersonal,pa.codigo,pa.universidad,pa.grado_academico,
+        p.nombre,p.apellido,p.idpersona
+         from personal_ayuda pa, persona p 
+         where p.tipo =$1 and
+         p.idpersona=pa.idpersona`,[estado]);
         return res.status(200).json(response.rows);
     } catch (e) {
         return res.status(500).json(e);
     }
 }
 
-//ESTUDIANTE
 
-export const getEstudiante = async (req, res) => {
-    try {
-        const response = await pool.query(`select *from personal_ayuda where tipo ='estudiante'`);
-        return res.status(200).json(response.rows);
-    } catch (e) {
-        return res.status(500).json(e);
-    }
-}
-
-//PSICOLOGO
-
-export const getPsicologo = async (req, res) => {
-    try {
-        const response = await pool.query(`select *from personal_ayuda where tipo ='psicologo'`);
-        return res.status(200).json(response.rows);
-    } catch (e) {
-        return res.status(500).json(e);
-    }
-}
