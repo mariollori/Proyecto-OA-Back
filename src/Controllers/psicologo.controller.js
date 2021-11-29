@@ -9,6 +9,7 @@ export const listarpsicologosdes = async (req, res) => {
         // estado = 0 =>> desactivado
         // estado = 1 =>> sin asignar
         // estado = 2 =>> activo
+        // estado = 3 =>> ocupado
         const response = await pool.query(
         `select pr.idpersonal,pr.codigo, pr.tipo,pr.especialidad ,pr.tipo,pr.ciclo,pr.grupo,pr.universidad ,
          p.nombre,p.apellido,p.correo,p.telefono

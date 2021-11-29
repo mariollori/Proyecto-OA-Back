@@ -5,7 +5,7 @@ import { pool } from '../database'
 export const readUser = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        const response = await pool.query('select p.idpersona, p.nombre,p.apellido,p.telefono,p.correo,p.genero,u.tipo,u.universidad,u.edad,u.ciclo,u.grupo from persona p ,personal_ayuda  u where u.idpersonal=$1 and u.idpersona=  p.idpersona ', [id]);
+        const response = await pool.query('select p.idpersona, p.nombre,p.apellido,p.telefono,p.correo,p.genero,p.tipo,u.universidad,u.edad,u.ciclo,u.grupo from persona p ,personal_ayuda  u where u.idpersonal=$1 and u.idpersona=  p.idpersona ', [id]);
         return res.status(200).json(response.rows);
     } catch (e) {
         console.log(e);
@@ -31,13 +31,15 @@ export const getuserstocompare = async (req, res) => {
 export const crearcancelacion = async (req, res) => {
     try {
         
-        const {cancelacion,idpaciente}=req.body;
+        const {cancelacion,idpaciente,idpersonal}=req.body;
        
         var f = new Date();
         const response = await pool.query(`insert into cancelacion(motivo,fecha,idasignacion) values($1,$2,$3)`,
         [cancelacion.motivo,f,cancelacion.idasignacion]);
 
-        const response2 = await pool.query(`update paciente set estado='Finalizado' where idpaciente=$1`,[idpaciente]);
+        const response2 = await pool.query(`update paciente set estado='Cancelado' where idpaciente=$1`,[idpaciente]);
+
+        const response3 = await pool.query(`update personal_ayuda set estado=2 where idpersonal=$1`,[idpersonal]);
         return res.status(200).json('Se cancelo la solicitud de atencion.');
 
     } catch (e) {

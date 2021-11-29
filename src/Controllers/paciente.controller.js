@@ -11,7 +11,7 @@ export const getatenciones_pend = async(req,res)=>{
                   and d.idasignacion = ra.idasignacion
                   and ra.estado = 0
                   and d.idpaciente=c.idpaciente 
-                  and c.estado = 'En proceso'
+                  and c.estado = 'En Proceso'
                   and c.idpersona = p.idpersona;`,[idpersonal]);
               console.log(response.rows)
 
@@ -33,7 +33,7 @@ export const getpac_asignados = async(req,res)=>{
         from paciente c, persona p, personal_ayuda a, asignaciones d 
         where d.idpersonal=$1
               and d.idpaciente=c.idpaciente 
-              and c.estado = 'En proceso'
+              and c.estado = 'En Proceso'
               and c.idpersona = p.idpersona;`,[idpersonal]);
               console.log(response.rows)
 
@@ -83,9 +83,9 @@ export const getlast_register = async(req,res)=>{
 export const registraratencion_final = async (req, res) => {
     try {
          
-        const  {atencion,id,derivacion}=req.body;
+        const  {atencion,id,derivacion,idpersonal}=req.body;
         const response = await pool.query('update registro_atencion set  condicion=$1,evidencia=$2 ,observaciones=$3 ,estado=$4, nro_sesion=$5 where idregistro_aten = $6', [atencion.condicion,atencion.evidencia,atencion.observaciones,1,atencion.nro_sesion,atencion.idregistro_aten]);
-
+        const response2 = await pool.query(`update personal_ayuda set  estado=2 where idpersonal = $1`, [idpersonal]);
         if(derivacion){
             await pool.query(`update paciente set  estado='Derivado' where idpaciente = $1`, [id]);
            
