@@ -2,6 +2,7 @@
   "name": "ProyectoOa-backend",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/app.js --exec babel-node",
