@@ -2,7 +2,7 @@
   "name": "ProyectoOa-backend",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
+ 
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/app.js --exec babel-node",
@@ -41,9 +41,6 @@
     "@babel/plugin-transform-runtime": "^7.16.0",
     "@babel/preset-env": "^7.16.0",
     "nodemon": "^2.0.15"
-  },
-  "engines": {
-    "node": "14.x",
-    "npm": "7.x"
   }
+
 }
