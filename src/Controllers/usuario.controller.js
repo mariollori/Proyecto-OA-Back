@@ -87,7 +87,7 @@ export const loginpac=async(req,res)=>{
             console.log(responesuser.rows[0])     
 
             const idpersona= responesuser.rows[0].idpersona;
-            const response2= await pool.query('select * from paciente where idpersona=$1',[idpersona])
+            const response2= await pool.query(`select * from paciente where idpersona=$1 and estado!='Cancelado' `,[idpersona])
             console.log(response2.rows[0])
             console.log(nro_cita)
             if(nro_cita === response2.rows[0].nro_cita){
@@ -108,7 +108,7 @@ export const getasignaciondata = async (req, res) => {
     try {
         const idpaciente = parseInt(req.params.id);
         const response = await pool.query(
-            `select pa.universidad, p.nombre,p.apellido,p.telefono,p.correo
+            `select pa.universidad,pa.idpersonal, p.nombre,p.apellido,p.telefono,p.correo
             from persona p, personal_ayuda pa, asignaciones a
             where a.idpaciente=$1 and
             a.idpersonal=pa.idpersonal and
@@ -128,9 +128,37 @@ export const getpersonadata = async (req, res) => {
     try {
         const idpersona = parseInt(req.params.id);
         const response = await pool.query(
-            `select * from persona where idpersona=$1 `, 
+            `select p.nombre,p.apellido,p.genero,p.tipo,p.idpersona,pa.estado from persona p,paciente pa where pa.idpersona=$1 and pa.idpersona=p.idpersona `, 
              [idpersona]);
         return res.status(200).json(response.rows[0]);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno...!');
+    }
+}
+
+
+export const getpuntuacionexis = async (req, res) => {
+    try {
+        const idpersona = parseInt(req.params.id);
+        const response = await pool.query(
+                        `select * from puntajes where idpaciente= $1`, 
+             [idpersona]);
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno...!');
+    }
+}
+
+
+export const crearpuntuacion = async (req, res) => {
+    try {
+        const {idpaciente,idpersonal,puntaje} = req.body;
+        const response = await pool.query(
+                        `insert into puntajes(idpaciente,idpersonal,puntaje) values($1,$2,$3)`, 
+             [idpaciente,idpersonal,puntaje]);
+        return res.status(200).json('Valoracion registrada');
     } catch (e) {
         console.log(e);
         return res.status(500).json('Error Interno...!');

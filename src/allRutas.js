@@ -6,6 +6,8 @@ const appe = express();
 const persona = require('./routes/persona.routes')
 appe.use('/persona',persona)
 
+const reporte = require('./routes/reporte.route')
+appe.use('/reporte',reporte)
 
 const usuario = require('./routes/usuario.routes')
 appe.use('/usuario',usuario)
