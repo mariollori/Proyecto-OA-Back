@@ -6,7 +6,8 @@ const router = Router();
 const { checkToken } = require('../auth/tokenValidation');
 
 router.get('/:id',checkToken, usuario.readUser);
-
+router.get('/datapersonal/:id',checkToken, usuario.getdatapersonal);
+router.get('/dataschool/:id',checkToken, usuario.getdataschool);
 router.get('/dataasig/:id', usuario.getasignaciondata);
 router.get('/persondata/:id', usuario.getpersonadata);
 router.get('/puntajeexist/:id', usuario.getpuntuacionexis);

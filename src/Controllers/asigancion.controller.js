@@ -45,7 +45,7 @@ export const buscarasignacion = async (req, res) => {
         const estado = req.query.estado;
         console.log(estado);
         const response = await pool.query(`
-        select p.nombre, p.apellido,a.idpaciente, a.motivo,a.descripcion, 
+        select p.nombre, p.apellido,a.idpaciente, a.motivo,a.descripcion, p.genero,
         p.telefono, a.estado from persona p, paciente a where a.idpersona = p.idpersona
          and a.estado= $1`, [estado]);
         return res.status(200).json(response.rows);
@@ -78,7 +78,7 @@ export const get_Data_Psi_asignado = async (req, res) => {
 
 export const get_ultima_observacion = async (req, res) => {
     try {
-       
+
         const idpaciente = req.params.id
 
         const response = await pool.query(`
@@ -136,8 +136,51 @@ export const asignarpac_estud = async (req, res) => {
             , idpaciente, f]);
         const response2 = await pool.query(` update paciente set estado='En Proceso' where idpaciente=$1`, [idpaciente])
         const response3 = await pool.query(` update personal_ayuda set estado=3 where idpersonal=$1`, [idpersonal])
+        var message = {
+            app_id: "0f4599ff-8cbe-4d06-a525-f637d5c40dc0",
+            contents: {"en": "Se asigno un paciente xd", "es": "Se le asigno un nuevo paciente" },
+            channel_for_external_user_ids: "push",
+            include_external_user_ids: [`${idpersonal}`]
+        };
+        
+        sendNotification(message);
         return res.status(200).json({ message: 'Asignacion registrada.' });
     } catch (e) {
         return res.status(500).json(e);
     }
 }
+
+
+var sendNotification = function (data) {
+    
+    var headers = {
+        "Content-Type": "application/json; charset=utf-8",
+        "Authorization": "Basic NDEwOWNlZmYtMjAwNy00NDY4LTk1ZTctYjExM2EwZTVkMTEz"
+    };
+
+
+    var options = {
+        host: "onesignal.com",
+        port: 443,
+        path: "/api/v1/notifications",
+        method: "POST",
+        headers: headers
+    };
+
+    var https = require('https');
+    var req = https.request(options, function (res) {
+        res.on('data', function (data) {
+            console.log("Response:");
+            console.log(JSON.parse(data));
+        });
+    });
+
+    req.on('error', function (e) {
+        console.log("ERROR:");
+        console.log(e);
+    });
+
+    req.write(JSON.stringify(data));
+    req.end();
+};
+
