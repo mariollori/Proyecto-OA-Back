@@ -63,7 +63,7 @@ export const get_Data_Psi_asignado = async (req, res) => {
         const idpaciente = req.params.id
 
         const response = await pool.query(`
-        select p.nombre, p.apellido,p.tipo,p.telefono,p.correo,a.especialidad, a.universidad, 
+        select p.nombre, p.apellido,p.tipo,p.telefono,p.correo,a.especialidad, a.universidad, a.foto,
         a.grado_academico, a.n_colegiatura,a.ciclo,a.grupo ,a.codigo 
         from persona p, personal_ayuda a,asignaciones asig where asig.idpaciente = $1
          and asig.idpersonal= a.idpersonal and a.idpersona= p.idpersona`, [idpaciente]);
@@ -82,11 +82,10 @@ export const get_ultima_observacion = async (req, res) => {
         const idpaciente = req.params.id
 
         const response = await pool.query(`
-        select  distinct re.condicion, re.observaciones
+        select  distinct re.condicion, re.observaciones,re.evidencia,re.nro_sesion,re.fecha_sesion
         from asignaciones asig,registro_atencion re 
-        where re.fecha_sesion = (SELECT MAX(re.fecha_sesion) FROM registro_atencion re ,asignaciones asig WHERE asig.idpaciente = $1 and 
-        asig.idasignacion = re.idasignacion	)
- LIMIT 1 `, [idpaciente]);
+        where asig.idpaciente = $1 and 
+        asig.idasignacion = re.idasignacion	order by re.nro_sesion; `, [idpaciente]);
         return res.status(200).json(response.rows);
     } catch (e) {
         return res.status(500).json(e);

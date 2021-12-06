@@ -12,7 +12,7 @@ export const listarpsicologosdes = async (req, res) => {
         // estado = 3 =>> ocupado
         const response = await pool.query(
         `select pr.idpersonal,pr.codigo, pr.especialidad ,pr.ciclo,pr.grupo,pr.universidad ,
-         p.nombre,p.apellido,p.correo,p.telefono,p.tipo
+         p.nombre,p.apellido,p.correo,p.telefono,p.tipo,p.idpersona
         from personal_ayuda pr, persona p 
         where  pr.estado = 1 and pr.idpersona = p.idpersona;
           
@@ -24,7 +24,26 @@ export const listarpsicologosdes = async (req, res) => {
     }
 }
 
+export const deletesolicitud = async (req, res) => {
+  try {
+      const {idpersonal,idpersona} = req.body
+      // estado = 0 =>> desactivado
+      // estado = 1 =>> sin asignar
+      // estado = 2 =>> activo
+      // estado = 3 =>> ocupado
+      const response3 = await pool.query( `delete from horario_psicologo where idpersonal =$1`,[idpersonal]);
+      const response = await pool.query( `delete from personal_ayuda where idpersonal =$1`,[idpersonal]); 
+      const response2 = await pool.query( `delete from persona where idpersona =$1`,[idpersona]);
 
+    
+  
+      
+      return res.status(200).json('Solicitud eliminada.');
+  } catch (e) {
+      console.log(e);
+      return res.status(500).json('Error Interno...!');
+  }
+}
 
 
 export const crearusuariooa=async(req,res)=>{
@@ -51,14 +70,19 @@ export const crearusuariooa=async(req,res)=>{
 
  async function enviarmensaje(usuario,password,destino){
    try {
+    var  contentHTML = `
+     <img src='https://www.upeu.edu.pe/wp-content/uploads/2021/05/oido-AMIGO-LOGOTIPO1-300x99.png' width="150" height="50"  >
+      <h2 style="color:teal">Credenciales de Sesion</h2>
+      <ul style="list-style:none">
+          <li style="font-size: 16px;color : black">Usuario: ${usuario}</li>
+          <li style="font-size: 16px;color : black">Contraseña: ${password}</li>
+      </ul>`;
     var mailOptions = {
-      from: 'examen3dad@gmail.com',
+      from: '"Oido Amigo" <examen3dad@gmail.com>', 
       to:destino,
       subject: 'Crenciales de inicio de sesion',
-      text: `Felicidades, su solicitud ha sido aceptada.
-      Estas son las credenciales asignadas para que pueda acceder al sistema.
-      Usuario: ${usuario} 
-      Contraseña: ${password}`
+      html:contentHTML,
+     
     };
   var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -77,4 +101,43 @@ export const crearusuariooa=async(req,res)=>{
  
 
 
+  export const crearmensaje=async(req,res)=>{
+    try {
+      const { usuario,password,destino} = req.body;
+     var  contentHTML = `
+     <img src='https://www.upeu.edu.pe/wp-content/uploads/2021/05/oido-AMIGO-LOGOTIPO1-300x99.png' width="150" height="50"  >
+      <h2 style="color:teal">Credenciales de Sesion</h2>
+      <ul style="list-style:none">
+          <li style="font-size: 16px;color : black">Usuario: ${usuario}</li>
+          <li style="font-size: 16px;color : black">Contraseña: ${password}</li>
+      </ul>`;
+      var mailOptions = {
+        from: '"Oido Amigo" <examen3dad@gmail.com>', 
+        to:destino,
+        subject: 'Crenciales de inicio de sesion',
+        html:contentHTML,
+       
+      };
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'examen3dad@gmail.com',
+        pass: 'chain@24'
+      }
+    });
+      await transporter.sendMail(mailOptions);
+      console.log('sise puede V:')
+       
+        return res.status(200).json("Exito al crear el usuario");
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno....!');
+    }
+  
+ 
+ 
+
+
+
+  }
 

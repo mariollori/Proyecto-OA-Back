@@ -30,7 +30,22 @@ export const obtenerestadisticas = async (req, res) => {
         return res.status(500).json(e);
     }
 }
-
+export const obtenerestadisticastotales = async (req, res) => {
+    try {
+        const tipo = req.params.tipo;
+        
+        const response = await pool.query(`
+        select  pac.estado ,count(*)
+        from paciente pac,personal_ayuda pa,persona p
+        ,asignaciones asig
+         where asig.idpersonal = pa.idpersonal and pa.idpersona=p.idpersona and p.tipo=$1
+		 and asig.idpaciente = pac.idpaciente 
+           group by pac.estado`, [tipo]);
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        return res.status(500).json(e);
+    }
+}
 export const obtenerestadisticas_fecha = async (req, res) => {
     try {
         console.log(req.query.id)
@@ -47,6 +62,28 @@ export const obtenerestadisticas_fecha = async (req, res) => {
 		 asig.fecha >= $2 and asig.fecha <= $3 and
 		 asig.idpaciente = p.idpaciente
            group by p.estado`, [id,fechai,fechaf]);
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        return res.status(500).json(e);
+    }
+}
+
+export const obtenerestadisticastotales_fecha = async (req, res) => {
+    try {
+        
+        
+        const fechai = req.query.fechai;
+        const fechaf = req.query.fechaf;
+        const tipo = req.query.tipo;
+        
+        const response = await pool.query(`
+        select  pac.estado ,count(*)
+        from paciente pac,personal_ayuda pa,persona p
+        ,asignaciones asig
+         where 
+		 asig.fecha >= $1 and asig.fecha <= $2 and  asig.idpersonal = pa.idpersonal and  pa.idpersona=p.idpersona and p.tipo=$3
+		 and asig.idpaciente = pac.idpaciente 
+           group by pac.estado`, [fechai,fechaf,tipo]);
         return res.status(200).json(response.rows);
     } catch (e) {
         return res.status(500).json(e);
