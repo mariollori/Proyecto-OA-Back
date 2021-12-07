@@ -6,8 +6,8 @@ export const buscarpersonal = async (req, res) => {
         const tipo = req.query.tipo;
         
         const response = await pool.query(`
-        select p.nombre, p.apellido,a.idpersonal,  a.estado,a.universidad,a.especialidad,
-        p.telefono from persona p, personal_ayuda a where a.estado!=1 and a.estado!=0 and a.idpersona = p.idpersona and
+        select p.nombre, p.apellido,a.idpersonal,  a.estado,p.correo,p.telefono,p.tipo
+        from persona p, personal_ayuda a where a.estado!=1 and a.estado!=0 and a.idpersona = p.idpersona and
 		p.tipo =$1`, [tipo]);
         return res.status(200).json(response.rows);
     } catch (e) {

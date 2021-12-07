@@ -23,15 +23,15 @@ export const createDatoPsicologos = async (req, res) => {
             [persona.nombre , persona.apellido , persona.correo , persona.telefono , persona.genero, persona.tipo]);
             var  idpersonal = 0;
             if(persona.tipo == 'estudiante'){
-                idpersonal=  await pool.query('INSERT INTO personal_ayuda (ciclo , grupo  ,codigo , idpersona, estado) values ($1, $2, $3 , $4 , 1) returning idpersonal;',
-                [personal_ayuda.ciclo , personal_ayuda.grupo , personal_ayuda.codigo , idpersona.rows[0].idpersona]);
+                idpersonal=  await pool.query('INSERT INTO personal_ayuda (ciclo , grupo  ,codigo , idpersona,edad, estado) values ($1, $2, $3 , $4 ,$5, 1) returning idpersonal;',
+                [personal_ayuda.ciclo , personal_ayuda.grupo , personal_ayuda.codigo , idpersona.rows[0].idpersona,persona.edad]);
         
             }else if(persona.tipo == 'psicologo'){
-                idpersonal=  await pool.query('INSERT INTO personal_ayuda (universidad , grado_academico  ,n_colegiatura ,especialidad, idpersona, estado) values ($1, $2, $3 , $4 ,$5, 1) returning idpersonal;',
-                [personal_ayuda.universidad , personal_ayuda.grado_academico , personal_ayuda.n_colegiatura ,personal_ayuda.especialidad ,  idpersona.rows[0].idpersona]);
+                idpersonal=  await pool.query('INSERT INTO personal_ayuda (universidad , grado_academico  ,n_colegiatura ,especialidad, idpersona,edad, estado) values ($1, $2, $3 , $4 ,$5 ,$6, 1) returning idpersonal;',
+                [personal_ayuda.universidad , personal_ayuda.grado_academico , personal_ayuda.n_colegiatura ,personal_ayuda.especialidad , idpersona.rows[0].idpersona,persona.edad]);
             }else{
-                idpersonal=  await pool.query('INSERT INTO personal_ayuda (campo,distrito , idpersona, estado) values ($1, $2, $3 ,  1) returning idpersonal;',
-                [personal_ayuda.campo , personal_ayuda.distrito , idpersona.rows[0].idpersona]);
+                idpersonal=  await pool.query('INSERT INTO personal_ayuda (campo,distrito , idpersona,edad, estado) values ($1, $2, $3 ,$4,  1) returning idpersonal;',
+                [personal_ayuda.campo , personal_ayuda.distrito ,idpersona.rows[0].idpersona,persona.edad]);
             }
      
             const det= horario_psicologo.forEach(element => {
@@ -60,7 +60,7 @@ export const updatedataschool = async (req, res) => {
                 [personal_ayuda.universidad , personal_ayuda.grado_academico , personal_ayuda.n_colegiatura ,personal_ayuda.especialidad ,  personal_ayuda.idpersonal]);
             }else{
                 const responseuser3=  await pool.query('update  personal_ayuda set campo=$1,distrito=$2 where  idpersonal=$3',
-                [personal_ayuda.ciclo , personal_ayuda.grupo , personal_ayuda.codigo , personal_ayuda.idpersonal]);
+                [personal_ayuda.campo , personal_ayuda.distrito , personal_ayuda.idpersonal]);
             }
     
       

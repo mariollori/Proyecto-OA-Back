@@ -26,7 +26,7 @@ export const getdatapersonal = async (req, res) => {
 export const getdataschool = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        const response = await pool.query('select  p.idpersona,u.universidad,u.foto,u.edad,u.n_colegiatura,u.grado_academico,u.ciclo,u.grupo,u.especialidad,u.codigo,p.tipo from persona p ,personal_ayuda  u where u.idpersonal=$1 and u.idpersona=  p.idpersona ', [id]);
+        const response = await pool.query('select  p.idpersona,u.universidad,u.foto,u.edad,u.n_colegiatura,u.grado_academico,u.ciclo,u.grupo,u.especialidad,u.codigo,u.campo,u.distrito,p.tipo from persona p ,personal_ayuda  u where u.idpersonal=$1 and u.idpersona=  p.idpersona ', [id]);
         return res.status(200).json(response.rows);
     } catch (e) {
         console.log(e);
@@ -72,6 +72,9 @@ export const modificarpersonaldata = async (req, res) => {
         const  {persona}=req.body;
         const response = await pool.query('update persona set nombre=$1, apellido=$2,correo=$3,telefono=$4,genero=$5where idpersona = $6',
          [persona.nombre,persona.apellido,persona.correo,persona.telefono,persona.genero,persona.idpersona]);
+
+         const response2 = await pool.query('update personal_ayuda  set edad=$1 where idpersona = $2',
+         [persona.edad,persona.idpersona]);
         return res.status(200).json(  `Datos personales guardados.`  );
     } catch (e) {
         console.log(e);

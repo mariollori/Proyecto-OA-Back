@@ -63,7 +63,7 @@ export const get_Data_Psi_asignado = async (req, res) => {
         const idpaciente = req.params.id
 
         const response = await pool.query(`
-        select p.nombre, p.apellido,p.tipo,p.telefono,p.correo,a.especialidad, a.universidad, a.foto,
+        select p.nombre, p.apellido,p.tipo,p.telefono,p.correo,a.especialidad, a.universidad, a.foto,a.distrito,a.campo,
         a.grado_academico, a.n_colegiatura,a.ciclo,a.grupo ,a.codigo 
         from persona p, personal_ayuda a,asignaciones asig where asig.idpaciente = $1
          and asig.idpersonal= a.idpersonal and a.idpersona= p.idpersona`, [idpaciente]);
@@ -97,7 +97,7 @@ export const getpersonalayudadisponible = async (req, res) => {
     try {
         const estado = req.query.estado;
         const response = await pool.query(`
-        select pa.ciclo,pa.especialidad,pa.grupo,pa.idpersonal,pa.codigo,pa.universidad,pa.grado_academico,
+        select pa.ciclo,pa.especialidad,pa.grupo,pa.idpersonal,pa.codigo,pa.universidad,pa.grado_academico,pa.n_colegiatura,pa.distrito,pa.campo,
         p.nombre,p.apellido,p.idpersona
          from personal_ayuda pa, persona p 
          where p.tipo =$1 and 
