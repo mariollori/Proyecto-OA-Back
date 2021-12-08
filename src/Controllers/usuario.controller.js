@@ -130,7 +130,7 @@ export const getasignaciondata = async (req, res) => {
     try {
         const idpaciente = parseInt(req.params.id);
         const response = await pool.query(
-            `select pa.universidad,pa.idpersonal, p.nombre,p.apellido,p.telefono,p.correo
+            `select pa.universidad,pa.idpersonal, p.nombre,p.apellido,p.telefono,p.correo,pa.foto
             from persona p, personal_ayuda pa, asignaciones a
             where a.idpaciente=$1 and
             a.idpersonal=pa.idpersonal and
