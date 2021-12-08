@@ -5,7 +5,7 @@ import { pool } from '../database'
 export const readUser = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        const response = await pool.query('select p.idpersona, p.nombre,p.apellido,p.telefono,p.correo,p.genero,p.tipo,u.universidad,u.edad,u.ciclo,u.grupo,u.foto from persona p ,personal_ayuda  u where u.idpersonal=$1 and u.idpersona=  p.idpersona ', [id]);
+        const response = await pool.query('select p.idpersona, p.nombre,p.apellido,p.telefono,p.correo,p.genero,p.tipo,u.universidad,u.edad,u.ciclo,u.grupo,u.foto,u.especialidad,u.distrito,u.campo,u.n_colegiatura from persona p ,personal_ayuda  u where u.idpersonal=$1 and u.idpersona=  p.idpersona ', [id]);
         return res.status(200).json(response.rows);
     } catch (e) {
         console.log(e);
