@@ -53,8 +53,8 @@ export const crearusuariooa=async(req,res)=>{
        enviarmensaje(username,password,destino);
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
-        const response = await pool.query('insert into usuario(username, password, idpersonal) values($1, $2, $3)', [username, hash, idpersonal])
-        const response2 = await pool.query('update personal_ayuda set estado = $1 where idpersonal=$2', [2,idpersonal])
+        const response = await pool.query('insert into usuario(username, password) values($1, $2) returning idusuario', [username, hash])
+          const response2 = await pool.query('update personal_ayuda set estado = $1, idusuario = $2 where idpersonal=$3', [2, response.rows[0].idusuario,idpersonal])
         return res.status(200).json("Exito al crear el usuario");
     } catch (e) {
         console.log(e);

@@ -19,11 +19,14 @@ export const login=async(req,res)=>{
             
             if(await bcryptjs.compare(password,passold)){
 
-                const usuario = {"idusuario":responesuser.rows[0].idusuario,"idpersonal":responesuser.rows[0].idpersonal};
+                const usuario = {"idusuario":responesuser.rows[0].idusuario};
+                const responsepersonal = await pool.query('select idpersonal from personal_ayuda where idusuario=$1',[responesuser.rows[0].idusuario]);
+
+                const personal = {"idpersonal":responsepersonal.rows[0].idpersonal}
                 const responserol  = await pool.query('select r.idrol, r.nombre  from rol r, usuario_rol ur  where  ur.idusuario=$1 and ur.idrol = r.idrol',[responesuser.rows[0].idusuario]);
  
                 const roles = responserol.rows;
-                const payload = { usuario, roles}
+                const payload = { personal,usuario, roles}
 
                
 

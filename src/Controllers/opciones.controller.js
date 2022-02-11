@@ -224,7 +224,7 @@ export const listarusuariospertenecientes = async (req, res) => {
 // <<<------------------- USUARIO ------------------------->>>
 export const listarusuarios = async (req, res) => {
     try {
-        const response = await pool.query('select p.nombre , p.apellido, u.username, u.idusuario from persona p ,personal_ayuda pa,usuario u where u.idpersonal = pa.idpersonal and pa.idpersona = p.idpersona');
+        const response = await pool.query('select p.nombre , p.apellido, u.username, u.idusuario from persona p ,personal_ayuda pa,usuario u where u.idusuario = pa.idusuario and pa.idpersona = p.idpersona');
         return res.status(200).json(response.rows);
     } catch (e) {
         console.log(e);
