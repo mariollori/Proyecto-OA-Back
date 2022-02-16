@@ -102,7 +102,7 @@ export const registraratencion_final = async (req, res) => {
 
 
 export const registraratencion_datos=async(req,res)=>{
-    const {paciente,fecha,id,atencion,hora} = req.body;
+    const {paciente,fecha,id,atencion} = req.body;
 
     try {
         const response = await  pool.query(    
@@ -117,7 +117,7 @@ export const registraratencion_datos=async(req,res)=>{
          values($1,$2,$3,$4,$5,$6,$7) `
          ,[id,atencion.nro_sesion,atencion.condicion,atencion.evidencia,atencion.observaciones,f,1]);
      
-         const response3 =   await  pool.query('insert into registro_atencion(fecha_sesion,idasignacion,estado,hora) values($1,$2,$3,$4)   ',[fecha,id,0,hora]);
+         const response3 =   await  pool.query('insert into registro_atencion(fecha_sesion,idasignacion,estado) values($1,$2,$3)   ',[fecha,id,0]);
         
                
         return res.status(200).json(` Atencio Registrada Correctamente`);
@@ -130,13 +130,13 @@ export const registraratencion_datos=async(req,res)=>{
 }
 
 export const registraratencionnueva=async(req,res)=>{
-    const {atencion,fecha,id,hora} = req.body;
+    const {atencion,fecha,id} = req.body;
 
     try {
         const response = await pool.query('update registro_atencion set  condicion=$1,evidencia=$2 ,observaciones=$3 ,estado=$4, nro_sesion=$5 where idregistro_aten = $6', [atencion.condicion,atencion.evidencia,atencion.observaciones,1,atencion.nro_sesion,atencion.idregistro_aten]);
 
-        const response2 =   await  pool.query('insert into registro_atencion(fecha_sesion,idasignacion,estado,hora) values($1,$2,$3,$4)   ',
-        [fecha,id,0,hora]);
+        const response2 =   await  pool.query('insert into registro_atencion(fecha_sesion,idasignacion,estado) values($1,$2,$3)   ',
+        [fecha,id,0]);
                
         return res.status(200).json(` Atencin registrada correctamente`);
         
@@ -149,11 +149,11 @@ export const registraratencionnueva=async(req,res)=>{
 
 
 export const updateatencion=async(req,res)=>{
-    const {fecha,id,hora} = req.body;
+    const {fecha,id} = req.body;
 
     try {
-        const response = await pool.query('update registro_atencion set  fecha_sesion=$1,hora=$2  where idregistro_aten = $3', 
-        [fecha,hora,id]);
+        const response = await pool.query('update registro_atencion set  fecha_sesion=$1 where idregistro_aten = $2', 
+        [fecha,id]);
                
         return res.status(200).json(`Fecha de  atencion actualizada`);
         
