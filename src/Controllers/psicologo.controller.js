@@ -11,8 +11,7 @@ export const listarpsicologosdes = async (req, res) => {
         // estado = 2 =>> activo
         // estado = 3 =>> ocupado
         const response = await pool.query(
-        `select pr.idpersonal,pr.codigo, pr.especialidad ,pr.ciclo,pr.grupo,pr.universidad ,pr.campo,pr.distrito,
-         p.nombre,p.apellido,p.correo,p.telefono,p.tipo,p.idpersona
+        `select pr.idpersonal,p.nombre,p.apellido,p.telefono,pr.tipo,p.idpersona,p.correo
         from personal_ayuda pr, persona p 
         where  pr.estado = 1 and pr.idpersona = p.idpersona;
           

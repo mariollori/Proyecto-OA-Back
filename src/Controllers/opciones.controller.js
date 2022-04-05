@@ -3,34 +3,23 @@ import { pool } from '../database'
 // <<------------------------OPCIONES------------------>>
 
 
-export const findopciones = async (req, res) => {
+export const get_opciones_por_rol = async (req, res) => {
     try {
-         
-       
         const opciones = [];
         const roles = JSON.parse(req.query['roles']);
-        
         for (let index = 0; index < roles.length; index++) {
-            console.log(roles[index]);
             const response = await pool.query('select o.nombre,o.idopcion,o.icono,o.ruta from opciones o,rol_opcion ro  where ro.idrol = $1 and o.idopcion = ro.idopcion', [roles[index]]);
             for (let index = 0; index < response.rows.length; index++) {
-
                 opciones.push(response.rows[index]);
-               }
-               
-               
+            }
         }
-        let hash = {};
-        let opa = opciones.filter(function(current) {
-            var exists = !hash[current.nombre];
-            console.log(!hash[current.nombre])
-            hash[current.nombre] = true;
+        let controlador = {};
+        let opciones_filtradas = opciones.filter(function(op) {
+            var exists = !controlador[op.nombre];  
+            controlador[op.nombre] = true;
             return exists;
-          });   
-          console.log(hash)
-        console.log(opa)
-       
-        return res.status(200).json( opa);
+          });
+        return res.status(200).json(opciones_filtradas);
     } catch (e) {
         console.log(e);
         return res.status(500).json('Error Interno...!');

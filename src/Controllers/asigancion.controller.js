@@ -59,14 +59,16 @@ export const buscarasignacion = async (req, res) => {
 
 export const get_Data_Psi_asignado = async (req, res) => {
     try {
-        console.log(req.params.id)
-        const idpaciente = req.params.id
+        const idpaciente = parseInt(req.params.id);
+        const tipo = await pool.query(` select a.tipo,a.idpersonal from  personal_ayuda a,asignaciones asig where asig.idpaciente = $1 and asig.idpersonal= a.idpersonal `,[idpaciente]);
+        var response;
+        if(tipo.rows[0].tipo == 'estudiante'){
+            response = await pool.query('select  p.nombre,p.apellido,p.telefono,pa.foto,e.ciclo,e.grupo,e.codigo,pa.tipo from personal_ayuda pa,estudiante e ,persona p where pa.idpersonal=$1  and pa.idpersona = p.idpersona and e.idpersonal=pa.idpersonal ', [tipo.rows[0].idpersonal]);
+        }else if(tipo.rows[0].tipo == 'psicologo'){
+            response = await pool.query('select pe.nombre,pe.apellido,p.telefonno, p.universidad,pa.foto,p.n_colegiatura,p.grado_academico,p.especialidad,pa.tipo from personal_ayuda pa,psicologo p,persona pe  where pa.idpersonal=$1 and pa.idpersona = pe.idpersona and p.idpersonal=pa.idpersonal ', [tipo.rows[0].idpersonal]);
+        }else{
 
-        const response = await pool.query(`
-        select p.nombre, p.apellido,p.tipo,p.telefono,p.correo,a.especialidad, a.universidad, a.foto,a.distrito,a.campo,
-        a.grado_academico, a.n_colegiatura,a.ciclo,a.grupo ,a.codigo 
-        from persona p, personal_ayuda a,asignaciones asig where asig.idpaciente = $1
-         and asig.idpersonal= a.idpersonal and a.idpersona= p.idpersona`, [idpaciente]);
+        }
         return res.status(200).json(response.rows);
     } catch (e) {
         return res.status(500).json(e);
@@ -95,14 +97,25 @@ export const get_ultima_observacion = async (req, res) => {
 
 export const getpersonalayudadisponible = async (req, res) => {
     try {
-        const estado = req.query.estado;
-        const response = await pool.query(`
-        select pa.ciclo,pa.especialidad,pa.grupo,pa.idpersonal,pa.codigo,pa.universidad,pa.grado_academico,pa.n_colegiatura,pa.distrito,pa.campo,
-        p.nombre,p.apellido,p.idpersona
-         from personal_ayuda pa, persona p 
-         where p.tipo =$1 and 
-         p.idpersona=pa.idpersona
-         and pa.estado=2`, [estado]);
+        const tipo = req.query.estado;
+        var response;
+        if(tipo == 'estudiante'){
+             response = await pool.query(`
+            select e.ciclo,e.grupo,pa.idpersonal,e.codigo,p.nombre,p.apellido,p.idpersona
+             from personal_ayuda pa, persona p ,estudiante e
+             where pa.tipo =$1 and 
+             pa.idpersona=p.idpersona 
+             and pa.estado=2 and e.idpersonal = pa.idpersonal`, [tipo]);
+        }else if(tipo == 'psicologo'){
+             response = await pool.query(`
+            select ps.especialidad,pa.idpersonal,ps.universidad,ps.grado_academico,ps.n_colegiatura,
+            p.nombre,p.apellido,p.idpersona
+             from personal_ayuda pa, persona p ,psicologo ps
+             where pa.tipo =$1 and 
+             pa.idpersona=p.idpersona
+             and pa.estado=2 and ps.idpersonal = pa.idpersonal`, [tipo]);
+        }
+       
         return res.status(200).json(response.rows);
     } catch (e) {
         return res.status(500).json(e);

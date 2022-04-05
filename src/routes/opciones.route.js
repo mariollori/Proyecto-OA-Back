@@ -5,7 +5,7 @@ const router = Router();
 import * as opciones_rol from '../Controllers/opciones.controller'
 
 
-router.get('/getopciones/',checkToken,opciones_rol.findopciones);
+router.get('/getopciones/',checkToken,opciones_rol.get_opciones_por_rol);
 
 router.get('/listarop/',checkToken,opciones_rol.listaropciones);
 router.post('/crearop/',checkToken,opciones_rol.crearopcion);

@@ -8,38 +8,22 @@ const refreshTokenSecret = "ex4m3n-p4r614l-3-refresh-access-token";
 export const login=async(req,res)=>{
 
     const {username,password} =req.body;
-  
-
     try {
         const responesuser  = await pool.query('select * from usuario where username=$1 ',[username]);
-       
         if(responesuser.rows.length!=0){
-          
             const passold= responesuser.rows[0].password;
-            
             if(await bcryptjs.compare(password,passold)){
-
                 const usuario = {"idusuario":responesuser.rows[0].idusuario};
                 const responsepersonal = await pool.query('select idpersonal from personal_ayuda where idusuario=$1',[responesuser.rows[0].idusuario]);
-
                 const personal = {"idpersonal":responsepersonal.rows[0].idpersonal}
                 const responserol  = await pool.query('select r.idrol, r.nombre  from rol r, usuario_rol ur  where  ur.idusuario=$1 and ur.idrol = r.idrol',[responesuser.rows[0].idusuario]);
- 
                 const roles = responserol.rows;
                 const payload = { personal,usuario, roles}
-
-               
-
-
-                
-
                 const token = jwt.sign(payload,secret,{expiresIn:'60m'})
-
-
                 return res.status(200).json({token})
             }else{
                 return res.status(403).json({
-                    message: 'Username o Password incorrectos...!',
+                    message: 'Usuario  o Contraseña incorrectos...!',
                     passold,password
                 });
             }
