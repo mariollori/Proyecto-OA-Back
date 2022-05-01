@@ -19,9 +19,18 @@ export const readDatospsicologoid = async (req, res) => {
 export const createDatoPsicologos = async (req, res) => {
     try {
         const { persona , personal_ayuda , horario_psicologo } = req.body;
-        const idpersona =  await pool.query('INSERT INTO persona (nombre , apellido , correo , telefono , genero,edad) values ($1 , $2, $3 , $4 ,$5,$6) returning  idpersona;',
+
+
+        const valid = await pool.query('select pe.nombre from personal_ayuda pa,persona pe  where pa.idpersona = pe.idpersona and pe.correo = $1', [persona.correo]);
+
+        if(valid.rowCount > 0){
+            return res.status(500).json(
+                `Lo sentimos, este correo ya ha sido registrado, por favor registre uno diferente.`);
+        }else{
+            const idpersona =  await pool.query('INSERT INTO persona (nombre , apellido , correo , telefono , genero,edad) values ($1 , $2, $3 , $4 ,$5,$6) returning  idpersona;',
             [persona.nombre , persona.apellido , persona.correo , persona.telefono , persona.genero, persona.edad]);
             const idpersonal = await pool.query('INSERT INTO personal_ayuda(idpersona,estado,sede,tipo) values($1,$2,$3,$4) returning idpersonal',[idpersona.rows[0].idpersona,1,persona.sede,persona.tipo])
+
             
             if(persona.tipo == 'estudiante'){
                  await pool.query('INSERT INTO estudiante (ciclo , grupo  ,codigo , idpersonal) values ($1, $2, $3 , $4 )',
@@ -30,18 +39,19 @@ export const createDatoPsicologos = async (req, res) => {
             }else if(persona.tipo == 'psicologo'){
                  await pool.query('INSERT INTO psicologo (universidad , grado_academico  ,n_colegiatura ,especialidad, idpersonal) values($1, $2, $3 , $4 ,$5)',
                 [personal_ayuda.universidad , personal_ayuda.grado_academico , personal_ayuda.n_colegiatura ,personal_ayuda.especialidad , idpersonal.rows[0].idpersonal]);
-            }else{
-                 await pool.query('INSERT INTO pastor (campo,distrito , idpersonal) values ($1, $2, $3 ) ',
-                [personal_ayuda.campo , personal_ayuda.distrito ,idpersonal.rows[0].idpersonal]);
             }
      
             const det= horario_psicologo.forEach(element => {
                 pool.query('insert into horario_psicologo(idpersonal,dia,horaf,horai) values($1,$2,$3,$4)', [idpersonal.rows[0].idpersonal,element.dia, element.horaf,element.horai]);
             });
+            return res.status(200).json(
+                ` ${persona.nombre} sus datos de especialista han sido registrados. Porfavor espere a que se le envien sus credenciales a su correo.`);
+        }
+
+        
       
     
-        return res.status(200).json(
-            ` ${persona.nombre} sus datos de especialista han sido registrados. Porfavor espere a que se le envien sus credenciales a su correo.`);
+     
     } catch (e) {
         console.log(e);
         return res.status(500).json('Internal Server error!');
@@ -121,10 +131,17 @@ export const  gethorariospsicologo = async (req, res) => {
 export const  subirfoto = async (req, res) => {
     try {
         const {  id,foto } = req.body;
-         const response = await pool.query('update  personal_ayuda set foto= $1 where idpersonal=$2',
-         [foto,id]);
+        const name_foto = await pool.query('select foto from personal_ayuda where idpersonal=$1',[id]);
+        if(name_foto.rowCount == 0 ){
+            const response = await pool.query('update  personal_ayuda set foto= $1 where idpersonal=$2',[foto,id]);
+            return res.status(200).json('Foto actualizada.');
+        }else{
+            const response = await pool.query('update  personal_ayuda set foto= $1 where idpersonal=$2',[foto,id]);
+            return res.status(200).json(name_foto.rows);
+        }
+         
 
-        return res.status(200).json('Foto de perfil modificada con exito.');
+        
     } catch (e) {
         console.log(e)
         return res.status(500).json('Ocurrio un Problemas con el servidor interno!.');

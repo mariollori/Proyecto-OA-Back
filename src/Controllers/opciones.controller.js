@@ -211,9 +211,57 @@ export const listarusuariospertenecientes = async (req, res) => {
 
 
 // <<<------------------- USUARIO ------------------------->>>
+export const desactivar_usuario = async(req,res)=>{
+    try {
+        const idusuario = req.params.id;
+        const response = await pool.query(`update usuario set estado = 0 where idusuario = $1 `,[idusuario]);
+        const response2 = await pool.query(`update personal_ayuda set estado = 0 where idusuario = $1 `,[idusuario]);
+        // estado = 0 =>> desactivado
+        // estado = 1 =>> sin asignar
+        // estado = 2 =>> activo
+        // estado = 3 =>> ocupado
+          // estado = 4 =>> cumplio xd
+        return res.status(200).json('Exito al eliminar usuario.');
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno...!');
+    }
+}
+export const activar_usuario = async(req,res)=>{
+    try {
+        const idusuario = req.params.id;
+        const response = await pool.query(`update usuario set estado = 1 where idusuario = $1 `,[idusuario]);
+        const response2 = await pool.query(`update personal_ayuda set estado = 2 where idusuario = $1 `,[idusuario]);
+        // estado = 0 =>> desactivado
+        // estado = 1 =>> sin asignar
+        // estado = 2 =>> activo
+        // estado = 3 =>> ocupado
+          // estado = 4 =>> cumplio xd
+        return res.status(200).json('Exito al restaurar usuario.');
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno...!');
+    }
+}
 export const listarusuarios = async (req, res) => {
     try {
-        const response = await pool.query('select p.nombre , p.apellido, u.username, u.idusuario from persona p ,personal_ayuda pa,usuario u where u.idusuario = pa.idusuario and pa.idpersona = p.idpersona');
+        const {tipo,sede} = req.query;
+        var response;
+        // estado = 0 =>> desactivado
+        // estado = 1 =>> sin asignar
+        // estado = 2 =>> activo
+        // estado = 3 =>> ocupado
+        if(tipo=='Todos'){
+          response = await pool.query(
+            `select u.idusuario,p.nombre,p.apellido,p.telefono,pr.tipo,p.correo
+            from personal_ayuda pr, persona p ,usuario u
+              where  pr.estado != 0 and pr.estado != 1 and pr.sede = $1   and pr.idpersona = p.idpersona and u.idusuario = pr.idusuario;`,[sede]);
+        }else {
+          response = await pool.query(
+            `select u.idusuario,p.nombre,p.apellido,p.telefono,pr.tipo,p.correo
+            from personal_ayuda pr, persona p ,usuario u
+              where   pr.estado != 0 and pr.estado != 1 and pr.sede = $1  and pr.tipo = $2 and pr.idpersona = p.idpersona and u.idusuario = pr.idusuario ;`,[sede,tipo]);
+        }
         return res.status(200).json(response.rows);
     } catch (e) {
         console.log(e);
@@ -221,7 +269,24 @@ export const listarusuarios = async (req, res) => {
     }
 }
 
-
+export const listarusuarios_tipo = async (req, res) => {
+    try {
+       
+       const response= await pool.query(
+        `select u.idusuario,p.nombre,p.apellido,p.telefono,pr.tipo,p.correo,pr.sede
+        from personal_ayuda pr, persona p ,usuario u
+          where  pr.estado = 0 and u.estado = 0   and pr.idpersona = p.idpersona and u.idusuario = pr.idusuario;`);;
+        // estado = 0 =>> desactivado
+        // estado = 1 =>> sin asignar
+        // estado = 2 =>> activo
+        // estado = 3 =>> ocupado
+       
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json('Error Interno...!');
+    }
+}
 
 
 export const listaropcionesderol = async (req, res) => {

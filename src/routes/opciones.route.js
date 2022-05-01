@@ -36,6 +36,7 @@ router.get('/listarrolesactuales/:id',checkToken,opciones_rol.listarusuariospert
 router.post('/asignarrol/',checkToken,opciones_rol.asignarrol_user);
 
 router.get('/listarusers/',checkToken,opciones_rol.listarusuarios);
+router.get('/listarusers_desactives/',checkToken,opciones_rol.listarusuarios_tipo);
 router.get('/listaropcionesactuales/:id',checkToken,opciones_rol.listaropcionesderol);
 
 
@@ -43,4 +44,7 @@ router.delete('/eliminaropcrol/:id',checkToken,opciones_rol.eliminaropcionderol)
 router.delete('/eliminarroluser/:id',checkToken,opciones_rol.eliminarroldeusuario);
 
 
+
+router.delete('/desactivar_user/:id',checkToken,opciones_rol.desactivar_usuario);
+router.delete('/activar_user/:id',checkToken,opciones_rol.activar_usuario)
 module.exports = router;

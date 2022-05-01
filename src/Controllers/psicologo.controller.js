@@ -22,20 +22,47 @@ export const listarpsicologosdes = async (req, res) => {
         return res.status(500).json('Error Interno...!');
     }
 }
+export const list_personal_sede = async (req, res) => {
+  try {
+      const {tipo,sede} = req.query;
+      var response;
+      // estado = 0 =>> desactivado
+      // estado = 1 =>> sin asignar
+      // estado = 2 =>> activo
+      // estado = 3 =>> ocupado
+      if(tipo=='estudiante'){
+        response = await pool.query(
+          `select pr.idpersonal,p.nombre,p.apellido,p.telefono,pr.tipo,p.idpersona,p.correo,e.ciclo,e.grupo,e.codigo
+          from personal_ayuda pr, persona p , estudiante e
+            where  pr.estado = 1 and pr.sede = $1  and pr.tipo = 'estudiante' and e.idpersonal = pr.idpersonal and pr.idpersona = p.idpersona ;`,[sede]);
+      }else {
+        response = await pool.query(
+          `select pr.idpersonal,p.nombre,p.apellido,p.telefono,pr.tipo,p.idpersona,p.correo,psi.grado_academico,psi.especialidad,psi.n_colegiatura
+          from personal_ayuda pr, persona p ,  psicologo psi 
+            where  pr.estado = 1 and pr.sede = $1  and pr.tipo = 'psicologo' and psi.idpersonal = pr.idpersonal and pr.idpersona = p.idpersona ;`,[sede]);
+      }
+      return res.status(200).json(response.rows);
+  } catch (e) {
+      console.log(e);
+      return res.status(500).json('Error Interno...!');
+  }
+}
 
 export const deletesolicitud = async (req, res) => {
   try {
-      const {idpersonal,idpersona} = req.body
+      const {idpersonal,idpersona,tipo} = req.body
       // estado = 0 =>> desactivado
       // estado = 1 =>> sin asignar
       // estado = 2 =>> activo
       // estado = 3 =>> ocupado
       const response3 = await pool.query( `delete from horario_psicologo where idpersonal =$1`,[idpersonal]);
+      if(tipo=='estudiante'){
+        const response4 = await pool.query( `delete from estudiante where idpersonal =$1`,[idpersonal]); 
+      }else{
+        const response4 = await pool.query( `delete from psicologo where idpersonal =$1`,[idpersonal]); 
+      }
       const response = await pool.query( `delete from personal_ayuda where idpersonal =$1`,[idpersonal]); 
       const response2 = await pool.query( `delete from persona where idpersona =$1`,[idpersona]);
-
-    
-  
       
       return res.status(200).json('Solicitud eliminada.');
   } catch (e) {
@@ -47,13 +74,15 @@ export const deletesolicitud = async (req, res) => {
 
 export const crearusuariooa=async(req,res)=>{
     try {
-      const { username, password, idpersonal , destino} = req.body;
+      const { username, password, idpersonal , destino,rol} = req.body;
     
        enviarmensaje(username,password,destino);
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
-        const response = await pool.query('insert into usuario(username, password) values($1, $2) returning idusuario', [username, hash])
-          const response2 = await pool.query('update personal_ayuda set estado = $1, idusuario = $2 where idpersonal=$3', [2, response.rows[0].idusuario,idpersonal])
+        const response = await pool.query('insert into usuario(username, password,estado) values($1, $2,$3) returning idusuario', [username, hash,1])
+        const response2 = await pool.query('update personal_ayuda set estado = $1, idusuario = $2,nro_pacientes = 0 where idpersonal=$3', [2, response.rows[0].idusuario,idpersonal]);
+        const response3 = await pool.query('insert into usuario_rol(idrol,idusuario) values($1,$2)',[ rol,response.rows[0].idusuario])
+
         return res.status(200).json("Exito al crear el usuario");
     } catch (e) {
         console.log(e);

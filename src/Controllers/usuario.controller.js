@@ -89,9 +89,22 @@ export const crearcancelacion = async (req, res) => {
 export const modificar_datos_personales = async (req, res) => {
     try {
         const  {persona}=req.body;
-        const response = await pool.query('update persona set nombre=$1, apellido=$2,correo=$3,telefono=$4,genero=$5where idpersona = $6',
-         [persona.nombre,persona.apellido,persona.correo,persona.telefono,persona.genero,persona.idpersona]);
-        return res.status(200).json(  `Datos personales guardados.`  );
+        const valid = await pool.query('select pe.idpersona from personal_ayuda pa,persona pe  where pa.estado!=1 and  pa.idpersona = pe.idpersona   and pe.correo = $1', [persona.correo]);
+        if(valid.rowCount == 0 ){
+            const response = await pool.query('update persona set correo=$1,telefono=$2 where idpersona = $3',
+            [persona.correo,persona.telefono,persona.idpersona]);
+           return res.status(200).json(  `Datos personales guardados.`  );
+        }else{
+            if(valid.rows[0].idpersona == persona.idpersona){
+                const response = await pool.query('update persona set correo=$1,telefono=$2 where idpersona = $3',
+                [persona.correo,persona.telefono,persona.idpersona]);
+               return res.status(200).json(  `Datos personales guardados.`  );
+            }else{
+                return res.status(500).json(  `Este correo ya se registro, por favor ingrese otro.`  );
+            }
+        }
+     
+     
     } catch (e) {
         console.log(e);
         return res.status(500).json('Error Interno...!');
@@ -231,7 +244,7 @@ export const estadisticas_generales_tipo_sede_fecha = async (req, res) => {
         const tipo = req.query.tipo.toString();
         const sede = req.query.sede.toString();
         const fechai = req.query.fechai;
-        const fechaf = req.query.fechai;
+        const fechaf = req.query.fechaf;
         var response ;
         if(tipo=="todos"){
             response = await pool.query(`
@@ -255,3 +268,24 @@ export const estadisticas_generales_tipo_sede_fecha = async (req, res) => {
 
 
 
+export const obtenerestadisticas_fecha = async (req, res) => {
+    try {
+        console.log(req.query.id)
+        const id = req.query.id;
+        const fechai = req.query.fechai;
+        const fechaf = req.query.fechaf;
+
+
+        const response = await pool.query(`
+        select  asig.estado ,count(*)
+        from paciente p
+        ,asignaciones asig
+         where asig.idpersonal = $1 and
+		 asig.fecha >= $2 and asig.fecha <= $3 and
+		 asig.idpaciente = p.idpaciente
+           group by asig.estado`, [id, fechai, fechaf]);
+        return res.status(200).json(response.rows);
+    } catch (e) {
+        return res.status(500).json(e);
+    }
+}
