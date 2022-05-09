@@ -5,7 +5,7 @@
  
   "main": "index.js",
   "scripts": {
-    "start": "node src/app.js --exec babel-node",
+    "start": "nodemon src/app.js --exec babel-node",
     "start:dev": "nodemon src/app.js --exec babel-node"
   },
   "keywords": [],
