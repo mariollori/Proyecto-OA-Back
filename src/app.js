@@ -8,7 +8,10 @@ var cors = require("cors");
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
-
+var corsOptions = {
+origin: "http://localhost:4200",
+    optionsSuccessStatus: 200 
+}
 //RUTAS
 app.use("/EX3", allRoutes);
 
@@ -20,7 +23,7 @@ const { pg } = require("./database");
 //DATABASE
 
 //console.log(process.env.PORT);
-app.listen(process.env.PORT || 5050, () => {
+app.listen(process.env.PORT || 5050,cors(corsOptions) ,() => {
     console.log("Listen Server on port 5050");
 });
     

@@ -86,7 +86,7 @@ export const crearpaciente = async (req, res) => {
                 return res.status(500).json(` ${persona.nombre}, usted ya esta registrado, en breve se le contactara`);
             }else{
                 await pool.query('update  persona set correo = $1, telefono = $2 , edad = $3  where idpersona = $4', [persona.correo, persona.telefono, persona.edad,idpaciente_exist.rows[0].idpersona]) 
-                await pool.query('update paciente set como_conocio=$1,lugar_procedencia=$2 where idpaciente = $3',[paciente.como_conocio,paciente.lugar_procedencia,idpaciente_exist.rows[0].idpaciente])
+                await pool.query('update paciente set como_conocio=$1,departamento=$2,provincia=$3,distrito=$4 where idpaciente = $5',[paciente.como_conocio,paciente.departamento,paciente.provincia,paciente.distrito,idpaciente_exist.rows[0].idpaciente])
                 if (paciente.categoria == 'Riesgo' || paciente.categoria == 'Moderado') {
                     idpersonal = await pool.query(sql2,[2,'Psicologo'])
                     if (idpersonal.rowCount == 0) {
