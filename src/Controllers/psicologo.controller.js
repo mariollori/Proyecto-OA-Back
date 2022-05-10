@@ -76,12 +76,12 @@ export const crearusuariooa=async(req,res)=>{
     try {
       const { username, password, idpersonal , destino,rol} = req.body;
     
-       enviarmensaje(username,password,destino);
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(password, salt);
-        const response = await pool.query('insert into usuario(username, password,estado) values($1, $2,$3) returning idusuario', [username, hash,1])
-        const response2 = await pool.query('update personal_ayuda set estado = $1, idusuario = $2,nro_pacientes = 0 where idpersonal=$3', [2, response.rows[0].idusuario,idpersonal]);
-        const response3 = await pool.query('insert into usuario_rol(idrol,idusuario) values($1,$2)',[ rol,response.rows[0].idusuario])
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(password, salt);
+      const response = await pool.query('insert into usuario(username, password,estado) values($1, $2,$3) returning idusuario', [username, hash,1])
+      const response2 = await pool.query('update personal_ayuda set estado = $1, idusuario = $2,nro_pacientes = 0 where idpersonal=$3', [2, response.rows[0].idusuario,idpersonal]);
+      const response3 = await pool.query('insert into usuario_rol(idrol,idusuario) values($1,$2)',[ rol,response.rows[0].idusuario])
+      enviarmensaje(username,password,destino);
 
         return res.status(200).json("Exito al crear el usuario");
     } catch (e) {
@@ -99,12 +99,68 @@ export const crearusuariooa=async(req,res)=>{
  async function enviarmensaje(usuario,password,destino){
    try {
     var  contentHTML = `
-     <img src='https://www.upeu.edu.pe/wp-content/uploads/2021/05/oido-AMIGO-LOGOTIPO1-300x99.png' width="150" height="50"  >
-      <h2 style="color:teal">Credenciales de Sesion</h2>
-      <ul style="list-style:none">
-          <li style="font-size: 16px;color : black">Usuario: ${usuario}</li>
-          <li style="font-size: 16px;color : black">Contraseña: ${password}</li>
-      </ul>`;
+    <table width="100%" cellpadding="0" cellspacing="0"
+    style="background-color:#f7f9fa;padding:24px">
+    <tbody><tr>
+            <td>&nbsp;</td>
+            <td width="600">
+                <table width="100%" cellpadding="0" cellspacing="0"
+                    style="background-color:#fff">
+
+                    <tbody><tr>
+                            <td style="border-bottom:1px solid
+                                #cccccc;padding:24px">
+
+                                <img
+                                    style="display:block;max-height:35px;width:auto"
+                                    src="https://files.adventistas.org/noticias/es/2020/04/22184401/oido-AMIGO-LOGOTIPO.jpg"
+                                    alt="Udemy" width="75" class="CToWUd">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding:24px 24px 0 24px">
+                                <p><a
+                                        style="text-decoration:none;color:#1c1d1f">
+                                        Hola.
+                                    </a></p>
+                                <p>
+                                    <a
+                                        style="text-decoration:none;color:#1c1d1f">Hemos verificado tus datos 
+                                        y adjuntamos las credenciales para tu inicio de sesion.</a>
+                                </p>
+                                <p>
+                                    <a
+                                        style="text-decoration:none;color:#1c1d1f">Usuario: ${usuario}</a>
+                                </p>
+                                <p style="margin-bottom:0">
+                                    <a
+                                        style="text-decoration:none;color:#1c1d1f">Contraseña: ${password}</a>
+                                </p>
+                            </td>
+                        </tr>
+                       
+                        <tr>
+                            <td style="padding:48px 24px 0 24px">
+                                <p style="font-family:'SF Pro
+                                    Text',-apple-system,BlinkMacSystemFont,Roboto,'Segoe
+                                    UI',Helvetica,Arial,sans-serif,'Apple Color
+                                    Emoji','Segoe UI Emoji','Segoe UI
+                                    Symbol';font-size:12px;font-weight:400;line-height:1.4;color:#6a6f73;margin:0">
+                                    <span class="il">Que tengas un buen dia.</span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding:24px 0 0 0"></td>
+                        </tr>
+                    </tbody></table>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    </tbody></table>
+   
+     `;
     var mailOptions = {
       from: '"Oido Amigo" <examen3dad@gmail.com>', 
       to:destino,
@@ -133,12 +189,68 @@ export const crearusuariooa=async(req,res)=>{
     try {
       const { usuario,password,destino} = req.body;
      var  contentHTML = `
-     <img src='https://www.upeu.edu.pe/wp-content/uploads/2021/05/oido-AMIGO-LOGOTIPO1-300x99.png' width="150" height="50"  >
-      <h2 style="color:teal">Credenciales de Sesion</h2>
-      <ul style="list-style:none">
-          <li style="font-size: 16px;color : black">Usuario: ${usuario}</li>
-          <li style="font-size: 16px;color : black">Contraseña: ${password}</li>
-      </ul>`;
+     <table width="100%" cellpadding="0" cellspacing="0"
+     style="background-color:#f7f9fa;padding:24px">
+     <tbody><tr>
+             <td>&nbsp;</td>
+             <td width="600">
+                 <table width="100%" cellpadding="0" cellspacing="0"
+                     style="background-color:#fff">
+ 
+                     <tbody><tr>
+                             <td style="border-bottom:1px solid
+                                 #cccccc;padding:24px">
+ 
+                                 <img
+                                     style="display:block;max-height:35px;width:auto"
+                                     src="https://files.adventistas.org/noticias/es/2020/04/22184401/oido-AMIGO-LOGOTIPO.jpg"
+                                     alt="Udemy" width="75" class="CToWUd">
+ 
+                             </td>
+                         </tr>
+                         <tr>
+                             <td style="padding:24px 24px 0 24px">
+                                 <p><a
+                                         style="text-decoration:none;color:#1c1d1f">
+                                         Hola.
+                                     </a></p>
+                                 <p>
+                                     <a
+                                         style="text-decoration:none;color:#1c1d1f">Hemos verificado tus datos 
+                                         y adjuntamos las credenciales para tu inicio de sesion.</a>
+                                 </p>
+                                 <p>
+                                     <a
+                                         style="text-decoration:none;color:#1c1d1f">Usuario: ${usuario}</a>
+                                 </p>
+                                 <p style="margin-bottom:0">
+                                     <a
+                                         style="text-decoration:none;color:#1c1d1f">Contraseña: ${password}</a>
+                                 </p>
+                             </td>
+                         </tr>
+                        
+                         <tr>
+                             <td style="padding:48px 24px 0 24px">
+                                 <p style="font-family:'SF Pro
+                                     Text',-apple-system,BlinkMacSystemFont,Roboto,'Segoe
+                                     UI',Helvetica,Arial,sans-serif,'Apple Color
+                                     Emoji','Segoe UI Emoji','Segoe UI
+                                     Symbol';font-size:12px;font-weight:400;line-height:1.4;color:#6a6f73;margin:0">
+                                     <span class="il">Que tengas un buen dia.</span>
+                                 </p>
+                             </td>
+                         </tr>
+                         <tr>
+                             <td style="padding:24px 0 0 0"></td>
+                         </tr>
+                     </tbody></table>
+             </td>
+             <td>&nbsp;</td>
+         </tr>
+     </tbody></table>
+    
+      `;
       var mailOptions = {
         from: '"Oido Amigo" <examen3dad@gmail.com>', 
         to:destino,
