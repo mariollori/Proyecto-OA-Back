@@ -94,7 +94,7 @@ async function enviarmensaje(destino){
    service: 'gmail',
    auth: {
      user: 'examen3dad@gmail.com',
-     pass: 'chain@24'
+     pass: 'eghcdiuktxxkfepz'
    }
  });
    await transporter.sendMail(mailOptions);

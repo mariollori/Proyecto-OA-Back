@@ -116,7 +116,7 @@ export const crearusuariooa=async(req,res)=>{
     service: 'gmail',
     auth: {
       user: 'examen3dad@gmail.com',
-      pass: 'chain@24'
+      pass: 'eghcdiuktxxkfepz'
     }
   });
     await transporter.sendMail(mailOptions);
@@ -150,7 +150,7 @@ export const crearusuariooa=async(req,res)=>{
       service: 'gmail',
       auth: {
         user: 'examen3dad@gmail.com',
-        pass: 'chain@24'
+        pass: 'eghcdiuktxxkfepz'
       }
     });
       await transporter.sendMail(mailOptions);
