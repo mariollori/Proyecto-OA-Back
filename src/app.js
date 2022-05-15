@@ -10,6 +10,7 @@ app.use(cors());
 app.use(morgan("dev"));
 var corsOptions = {
 origin: "https://oidoamigo.netlify.app",
+// origin: "http://localhost:4200",
     optionsSuccessStatus: 200 
 }
 //RUTAS

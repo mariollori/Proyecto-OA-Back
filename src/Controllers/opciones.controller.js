@@ -253,12 +253,12 @@ export const listarusuarios = async (req, res) => {
         // estado = 3 =>> ocupado
         if(tipo=='psicologo'){
             response = await pool.query(
-                `select u.idusuario,p.nombre,p.apellido,p.telefono,pr.tipo,p.correo,p.sexo,psi.grado_academico,psi.n_colegiatura,psi.especialidad
+                `select u.idusuario,p.nombre,p.apellido,p.telefono,pr.tipo,p.correo,p.genero,psi.grado_academico,psi.n_colegiatura,psi.especialidad
                 from personal_ayuda pr, persona p ,usuario u,psicologo psi
                   where   pr.estado != 0 and pr.estado != 1 and pr.sede = $1  and pr.tipo = 'psicologo' and psi.idpersonal = pr.idpersonal and pr.idpersona = p.idpersona and u.idusuario = pr.idusuario ;`,[sede]);
         }else{
           response = await pool.query(
-            `select u.idusuario,p.nombre,p.apellido,p.telefono,pr.tipo,p.correo,p.sexo,e.ciclo,e.grupo,e.codigo
+            `select u.idusuario,p.nombre,p.apellido,p.telefono,pr.tipo,p.correo,p.genero,e.ciclo,e.grupo,e.codigo
             from personal_ayuda pr, persona p ,usuario u,estudiante e
               where   pr.estado != 0 and pr.estado != 1 and pr.sede = $1  and pr.tipo = 'estudiante'and psi.idpersonal = pr.idpersonal  and pr.idpersona = p.idpersona and u.idusuario = pr.idusuario ;`,[sede]);
         }
