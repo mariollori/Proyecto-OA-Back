@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
 var corsOptions = {
-origin: "http://localhost:4200",
+origin: "https://oidoamigo.netlify.app",
     optionsSuccessStatus: 200 
 }
 //RUTAS
