@@ -251,16 +251,16 @@ export const listarusuarios = async (req, res) => {
         // estado = 1 =>> sin asignar
         // estado = 2 =>> activo
         // estado = 3 =>> ocupado
-        if(tipo=='Todos'){
+        if(tipo=='psicologo'){
+            response = await pool.query(
+                `select u.idusuario,p.nombre,p.apellido,p.telefono,pr.tipo,p.correo,p.sexo,psi.grado_academico,psi.n_colegiatura,psi.especialidad
+                from personal_ayuda pr, persona p ,usuario u,psicologo psi
+                  where   pr.estado != 0 and pr.estado != 1 and pr.sede = $1  and pr.tipo = 'psicologo' and pr.idpersona = p.idpersona and u.idusuario = pr.idusuario ;`,[sede]);
+        }else{
           response = await pool.query(
-            `select u.idusuario,p.nombre,p.apellido,p.telefono,pr.tipo,p.correo
-            from personal_ayuda pr, persona p ,usuario u
-              where  pr.estado != 0 and pr.estado != 1 and pr.sede = $1   and pr.idpersona = p.idpersona and u.idusuario = pr.idusuario;`,[sede]);
-        }else {
-          response = await pool.query(
-            `select u.idusuario,p.nombre,p.apellido,p.telefono,pr.tipo,p.correo
-            from personal_ayuda pr, persona p ,usuario u
-              where   pr.estado != 0 and pr.estado != 1 and pr.sede = $1  and pr.tipo = $2 and pr.idpersona = p.idpersona and u.idusuario = pr.idusuario ;`,[sede,tipo]);
+            `select u.idusuario,p.nombre,p.apellido,p.telefono,pr.tipo,p.correo,p.sexo,e.ciclo,e.grupo,e.codigo
+            from personal_ayuda pr, persona p ,usuario u,estudiante e
+              where   pr.estado != 0 and pr.estado != 1 and pr.sede = $1  and pr.tipo = 'estudiante' and pr.idpersona = p.idpersona and u.idusuario = pr.idusuario ;`,[sede]);
         }
         return res.status(200).json(response.rows);
     } catch (e) {
