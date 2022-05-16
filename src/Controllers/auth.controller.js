@@ -13,13 +13,13 @@ export const login=async(req,res)=>{
 
     const {username,password} =req.body;
     try {
-        const responesuser  = await pool.query('select * from usuario where username=$1 and estado=1 ',[username]);
+        const responesuser  = await pool.query('select u.idusuario,u.password,u.username,pa.idpersonal from usuario u, personal_ayuda pa where u.username=$1 and u.estado=1 and pa.idusuario=u.idusuario ',[username]);
+        console.log(responesuser)
         if(responesuser.rows.length!=0){
             const passold= responesuser.rows[0].password;
             if(await bcryptjs.compare(password,passold)){
                 const usuario = {"idusuario":responesuser.rows[0].idusuario};
-                const responsepersonal = await pool.query('select idpersonal from personal_ayuda where idusuario=$1',[responesuser.rows[0].idusuario]);
-                const personal = {"idpersonal":responsepersonal.rows[0].idpersonal}
+                const personal = {"idpersonal":responesuser.rows[0].idpersonal}
                 const responserol  = await pool.query('select r.idrol, r.nombre  from rol r, usuario_rol ur  where  ur.idusuario=$1 and ur.idrol = r.idrol',[responesuser.rows[0].idusuario]);
                 const roles = responserol.rows;
                 const payload = { personal,usuario, roles}
@@ -35,6 +35,7 @@ export const login=async(req,res)=>{
             return res.status(500).json({ msg: 'Usuario o Contraseña invalidados'})
         }
     } catch (error) {
+        console.log(error)
         return res.status(500).json(error)
     }
 }
