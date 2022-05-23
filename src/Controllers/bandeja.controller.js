@@ -80,9 +80,58 @@ export const update_asignacion__de_personal = async (req, res) => {
 async function enviarmensaje(destino){
   try {
    var  contentHTML = `
-    <img src='https://www.upeu.edu.pe/wp-content/uploads/2021/05/oido-AMIGO-LOGOTIPO1-300x99.png' width="150" height="50"  >
-     <h2 style="color:teal">Felicidades</h2>
-     <label>Se le ha asignado un nuevo consultante, por favor revise su bandeja.</label>`;
+   <table width="100%" cellpadding="0" cellspacing="0"
+   style="background-color:#f7f9fa;padding:24px">
+   <tbody><tr>
+           <td>&nbsp;</td>
+           <td width="600">
+               <table width="100%" cellpadding="0" cellspacing="0"
+                   style="background-color:#fff">
+
+                   <tbody><tr>
+                           <td style="border-bottom:1px solid
+                               #cccccc;padding:24px">
+
+                               <img
+                                   style="display:block;max-height:35px;width:auto"
+                                   src="https://files.adventistas.org/noticias/es/2020/04/22184401/oido-AMIGO-LOGOTIPO.jpg"
+                                   alt="" width="75" class="CToWUd">
+
+                           </td>
+                       </tr>
+                       <tr>
+                           <td style="padding:24px 24px 0 24px">
+                               <p><a
+                                       style="text-decoration:none;color:#1c1d1f">
+                                       Felicidades.
+                                   </a></p>
+                               <p>
+                                   <a
+                                       style="text-decoration:none;color:#1c1d1f">Se le ha asignado un nuevo paciente, por favor inicie sesion y revise su bandeja. Link-> https://oidoamigo.netlify.app/#/home/loginpsi</a>
+                               </p>
+                              
+                           </td>
+                       </tr>
+                      
+                       <tr>
+                           <td style="padding:48px 24px 0 24px">
+                               <p style="font-family:'SF Pro
+                                   Text',-apple-system,BlinkMacSystemFont,Roboto,'Segoe
+                                   UI',Helvetica,Arial,sans-serif,'Apple Color
+                                   Emoji','Segoe UI Emoji','Segoe UI
+                                   Symbol';font-size:12px;font-weight:400;line-height:1.4;color:#6a6f73;margin:0">
+                                   <span class="il">Que tengas un buen dia.</span>
+                               </p>
+                           </td>
+                       </tr>
+                       <tr>
+                           <td style="padding:24px 0 0 0"></td>
+                       </tr>
+                   </tbody></table>
+           </td>
+           <td>&nbsp;</td>
+       </tr>
+   </tbody></table>`;
    var mailOptions = {
      from: '"Oido Amigo" <examen3dad@gmail.com>', 
      to:destino,

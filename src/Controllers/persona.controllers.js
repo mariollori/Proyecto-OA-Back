@@ -87,7 +87,7 @@ export const crearpaciente = async (req, res) => {
             }else{
                 await pool.query('update  persona set correo = $1, telefono = $2 , edad = $3  where idpersona = $4', [persona.correo, persona.telefono, persona.edad,idpaciente_exist.rows[0].idpersona]) 
                 await pool.query('update paciente set como_conocio=$1,departamento=$2,provincia=$3,distrito=$4 where idpaciente = $5',[paciente.como_conocio,paciente.departamento,paciente.provincia,paciente.distrito,idpaciente_exist.rows[0].idpaciente])
-                if (paciente.categoria == 'Riesgo' || paciente.categoria == 'Moderado') {
+                if (paciente.categoria == 'Riesgo') {
                     idpersonal = await pool.query(sql2,[2,'Psicologo'])
                     if (idpersonal.rowCount == 0) {
                         idpersonal = await pool.query(sql2,[3,'Psicologo'])
@@ -106,7 +106,7 @@ export const crearpaciente = async (req, res) => {
             const responseper = await pool.query('insert into persona(nombre,apellido,correo,genero,telefono,dni,edad) values($1,$2,$3,$4,$5,$6,$7)   RETURNING idpersona', [persona.nombre, persona.apellido, persona.correo, persona.genero, persona.telefono, persona.dni, persona.edad])
             if (responseper.rows[0].length != 0) {
                 responseuser = await pool.query(`insert into paciente(idpersona,nro_cita,como_conocio,departamento,provincia,distrito) values($1,nextval('citas'),$2,$3,$4,$5) RETURNING nro_cita,idpaciente`, [ responseper.rows[0].idpersona, paciente.como_conocio,paciente.departamento,paciente.provincia,paciente.distrito]);
-                if (paciente.categoria == 'Riesgo' || paciente.categoria == 'Moderado') {
+                if (paciente.categoria == 'Riesgo') {
                     idpersonal = await pool.query(sql2,[2,'Psicologo'])
                     if (idpersonal.rowCount == 0) {
                         idpersonal = await pool.query(sql2,[3,'Psicologo'])

@@ -29,20 +29,19 @@ export const createDatoPsicologos = async (req, res) => {
         }else{
             const idpersona =  await pool.query('INSERT INTO persona (nombre , apellido , correo , telefono , genero,edad) values ($1 , $2, $3 , $4 ,$5,$6) returning  idpersona;',
             [persona.nombre , persona.apellido , persona.correo , persona.telefono , persona.genero, persona.edad]);
-            const idpersonal = await pool.query('INSERT INTO personal_ayuda(idpersona,estado,sede,tipo) values($1,$2,$3,$4) returning idpersonal',[idpersona.rows[0].idpersona,1,persona.sede,persona.tipo])
-
+            const idpersonal = await pool.query('INSERT INTO personal_ayuda(idpersona,estado,sede,tipo) values($1,$2,$3,$4) returning idpersonal',[idpersona.rows[0].idpersona,1,persona.sede,persona.tipo]);
             
             if(persona.tipo == 'estudiante'){
-                 await pool.query('INSERT INTO estudiante (ciclo , grupo  ,codigo , idpersonal) values ($1, $2, $3 , $4 )',
+                const est =  await pool.query('INSERT INTO estudiante(ciclo , grupo  ,codigo , idpersonal) values ($1, $2, $3 , $4 )',
                 [personal_ayuda.ciclo , personal_ayuda.grupo , personal_ayuda.codigo , idpersonal.rows[0].idpersonal]);
         
-            }else if(persona.tipo == 'psicologo'){
-                 await pool.query('INSERT INTO psicologo (universidad , grado_academico  ,n_colegiatura ,especialidad, idpersonal) values($1, $2, $3 , $4 ,$5)',
+            }else{
+                const psi =   await pool.query('INSERT INTO psicologo(universidad , grado_academico  ,n_colegiatura ,especialidad, idpersonal) values($1, $2, $3 , $4 ,$5)',
                 [personal_ayuda.universidad , personal_ayuda.grado_academico , personal_ayuda.n_colegiatura ,personal_ayuda.especialidad , idpersonal.rows[0].idpersonal]);
             }
      
-            const det= horario_psicologo.forEach(element => {
-                pool.query('insert into horario_psicologo(idpersonal,dia,horaf,horai) values($1,$2,$3,$4)', [idpersonal.rows[0].idpersonal,element.dia, element.horaf,element.horai]);
+           horario_psicologo.forEach(element => {
+            const det =   pool.query('insert into horario_psicologo(idpersonal,dia,horaf,horai) values($1,$2,$3,$4)', [idpersonal.rows[0].idpersonal,element.dia, element.horaf,element.horai]);
             });
             return res.status(200).json(
                 ` ${persona.nombre} sus datos de especialista han sido registrados. Porfavor espere a que se le envien sus credenciales a su correo.`);
