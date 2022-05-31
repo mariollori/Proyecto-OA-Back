@@ -61,7 +61,8 @@ export const update_asignacion__de_personal = async (req, res) => {
     const idpersonal = parseInt(req.body.idpersonal);
     const idasignacion = parseInt(req.body.idasignacion);
     const codex = req.body.codex;
-    const response = await pool.query(`update asignaciones set idpersonal=$1, estado = 'En Proceso',nro_atenciones = 0 ,codex=$2 where idasignacion = $3`,[idpersonal,codex,idasignacion]);
+    var f = new Date();
+    const response = await pool.query(`update asignaciones set idpersonal=$1, estado = 'En Proceso',nro_atenciones = 0 ,codex=$2,fecha_asig=$3 where idasignacion = $4`,[idpersonal,codex,f,idasignacion]);
     const email = await pool.query('select pe.correo from personal_ayuda pa,persona pe where pa.idpersonal =$1 and pe.idpersona = pa.idpersona',[idpersonal]);
     enviarmensaje(email.rows[0].correo);
 
