@@ -43,7 +43,7 @@ export const get_personal_data = async (req, res) => {
     if(tipo.rows[0].tipo == 'estudiante'){
         response = await pool.query('select pe.nombre,pe.apellido,pe.telefono ,pa.foto,e.ciclo,e.grupo,e.codigo,pa.tipo,pa.idpersonal,pa.sede from personal_ayuda pa,estudiante e,persona pe  where pa.idpersonal=$1  and e.idpersonal=pa.idpersonal and pa.idpersona = pe.idpersona', [idpersonal]);
     }else if(tipo.rows[0].tipo == 'psicologo'){
-        response = await pool.query('select pe.nombre,pe.apellido,pe.telefono, p.universidad,pa.foto,p.n_colegiatura,p.grado_academico,p.especialidad,pa.tipo,pa.idpersonal,pa.sede from personal_ayuda pa,psicologo p ,persona pe where pa.idpersonal=$1 and p.idpersonal=pa.idpersonal and pa.idpersona = pe.idpersona ', [idpersonal]);
+        response = await pool.query('select pe.nombre,pe.apellido,pe.telefono,pa.foto,p.n_colegiatura,p.grado_academico,p.especialidad,pa.tipo,pa.idpersonal,pa.sede from personal_ayuda pa,psicologo p ,persona pe where pa.idpersonal=$1 and p.idpersonal=pa.idpersonal and pa.idpersona = pe.idpersona ', [idpersonal]);
     }else{
     
     }
