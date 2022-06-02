@@ -36,8 +36,8 @@ export const createDatoPsicologos = async (req, res) => {
                 [personal_ayuda.ciclo , personal_ayuda.grupo , personal_ayuda.codigo , idpersonal.rows[0].idpersonal]);
         
             }else{
-                const psi =   await pool.query('INSERT INTO psicologo(universidad , grado_academico  ,n_colegiatura ,especialidad, idpersonal) values($1, $2, $3 , $4 ,$5)',
-                [personal_ayuda.universidad , personal_ayuda.grado_academico , personal_ayuda.n_colegiatura ,personal_ayuda.especialidad , idpersonal.rows[0].idpersonal]);
+                const psi =   await pool.query('INSERT INTO psicologo(grado_academico  ,n_colegiatura ,especialidad, idpersonal) values($1, $2, $3 , $4 )',
+                [ personal_ayuda.grado_academico , personal_ayuda.n_colegiatura ,personal_ayuda.especialidad , idpersonal.rows[0].idpersonal]);
             }
      
            horario_psicologo.forEach(element => {
@@ -66,11 +66,10 @@ export const updatedataschool = async (req, res) => {
                 [personal_ayuda.ciclo , personal_ayuda.grupo , personal_ayuda.codigo ,personal_ayuda.idpersonal]);
         
             }else if(tipo == 'psicologo'){
-                const responseuser2=  await pool.query('update  psicologo set universidad =$1 , grado_academico=$2  ,n_colegiatura =$3,especialidad =$4 where  idpersonal=$5',
-                [personal_ayuda.universidad , personal_ayuda.grado_academico , personal_ayuda.n_colegiatura ,personal_ayuda.especialidad ,  personal_ayuda.idpersonal]);
+                const responseuser2=  await pool.query('update  psicologo set  grado_academico=$1  ,n_colegiatura =$2,especialidad =$3 where  idpersonal=$4',
+                [personal_ayuda.grado_academico , personal_ayuda.n_colegiatura ,personal_ayuda.especialidad ,  personal_ayuda.idpersonal]);
             }else{
-                const responseuser3=  await pool.query('update  personal_ayuda set campo=$1,distrito=$2 where  idpersonal=$3',
-                [personal_ayuda.campo , personal_ayuda.distrito , personal_ayuda.idpersonal]);
+              
             }
     
       
