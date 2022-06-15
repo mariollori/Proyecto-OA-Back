@@ -150,3 +150,21 @@ export const  subirfoto = async (req, res) => {
 
 
 
+// export const  get_estudiantes_5toaño = async (req, res) => {
+//     try {
+       
+//          const response = await pool.query(  `select distinct  p.nombre,p.apellido,pa.sede, p.genero,p.correo,e.ciclo,e.codigo,e.grupo,pa.nro_pacientes
+//          from personal_ayuda pa,
+//          persona p,
+//          estudiante e,
+//          asignaciones a
+//          where 
+//          pa.idpersona = p.idpersona and e.idpersonal = pa.idpersonal
+//          and a.idpersonal = pa.idpersonal and a.estado IN ('En Proceso','Finalizado')`);
+
+//         return res.status(200).json(response.rows);
+//     } catch (e) {
+//         console.log(e)
+//         return res.status(500).json('Ocurrio un Problemas con el servidor interno!.');
+//     }
+// }

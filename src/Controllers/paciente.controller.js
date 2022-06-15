@@ -166,9 +166,12 @@ export const registrar_puntuacion = async (req, res) => {
     try {
         const { dni,puntaje,descripcion,codex} = req.body
         var f = new Date();
-        const idpaciente = await pool.query(`select p.idpaciente,a.idpersonal from 
-        paciente p,asignaciones a ,persona pe
-        where pe.dni = $1 and p.idpersona = pe.idpersona and p.idpaciente = a.idpaciente and a.codex = $2 and a.estado ='Finalizado'`,[dni,codex])
+        const idpaciente = await pool.query(`
+        select pa.idpaciente,a.idpersonal from  persona pe
+        INNER JOIN paciente pa ON pe.idpersona = pa.idpersona and pe.dni = $1
+        INNER JOIN asignaciones a ON pa.idpaciente=a.idpaciente and a.codex = $2
+        where 
+        a.estado ='Finalizado' or a.nro_atenciones >=3`,[dni,codex])
 
         if(idpaciente.rowCount > 0){
             const punt = await pool.query(`select * from puntajes where codex = $1 `,[codex]);
