@@ -3,17 +3,6 @@ import {pool} from '../database'
 
 
 
-export const readDatospsicologoid = async (req, res) => {
-    try {
-        const id = parseInt(req.params.id);
-        const response = await pool.query('select pa.idpersonal, pe.nombre , pe.apellido , pe.correo , pa.edad , pe.telefono , pe.genero , pa.universidad , pa.grado_academico, pa.ciclo , pa.grupo , hr.dia_disponible , hr.hora_disponible , pa.estado from personal_ayuda pa , persona pe , horario_psicologo hr where  pa.idpersona = pe.idpersona and pa.idpersonal = hr.idpersonal and pa.idpersonal = $1', [id]);
-        return res.status(200).json(response.rows);
-    } catch (e) {
-        console.log(e)
-        return res.status(500).json('Internal Server error!');
-    }
-}
-
 
 
 export const createDatoPsicologos = async (req, res) => {

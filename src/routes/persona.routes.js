@@ -7,9 +7,9 @@ import * as persona from '../Controllers/persona.controllers'
 
 
 
-router.post('/enviarcorreo',persona.enviarcorreo);
 
-router.get('/getcorreos/:id',persona.getcorreos);
+
+
 
 
 

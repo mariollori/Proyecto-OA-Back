@@ -1,29 +1,25 @@
-import express from "express";
-import morgan from "morgan";
-import allRoutes from "./allRutas";
 require('dotenv').config();
-
+const express =require('express');
+const morgan = require('morgan');
+const routes =require('./allRutas');
+const cors = require("cors");
 const app = express();
-var cors = require("cors");
+var corsOptions = {
+    origin: "https://oidoamigo.netlify.app",
+    // origin: "http://localhost:4200",
+    optionsSuccessStatus: 200 
+}
+const allrutas = require("./allRutas");
+
+
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
-var corsOptions = {
-origin: "https://oidoamigo.netlify.app",
-// origin: "http://localhost:4200",
-    optionsSuccessStatus: 200 
-}
-//RUTAS
-app.use("/EX3", allRoutes);
+app.use("/EX3", routes);
 
-const allrutas = require("./allRutas");
-app.use(allrutas);
-
-const { pg } = require("./database");
-
-//DATABASE
-
-//console.log(process.env.PORT);
+app.get('/',function(req,res){
+ res.send('Bienvenido a Oido Amigo')
+})
 app.listen(process.env.PORT || 5050,cors(corsOptions) ,() => {
     console.log("Listen Server on port 5050");
 });

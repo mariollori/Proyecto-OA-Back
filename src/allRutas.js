@@ -1,5 +1,5 @@
 
-import express, { Router } from "express";
+const express = require('express');
 const appe = express();
 
 
@@ -19,11 +19,6 @@ appe.use('/auth',auth)
 const opciones = require('./routes/opciones.route')
 appe.use('/opcion', opciones)
 
-
-//ASIGNACIONES
-
-const asignacion = require('./routes/asignacion')
-appe.use('/asignacion', asignacion)
 
 
 const datos_psicologo = require('./routes/reg_dt_psicolog.router')
